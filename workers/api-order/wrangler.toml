@@ -1,0 +1,17 @@
+name = "airaquas-api-order"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "airaquas-hair"
+database_id = "aaccdbdb-1592-41dd-b906-891d0a9a9556"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "310cf3f8f1184ddc823c116242515435"
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "airaquas-hair"
