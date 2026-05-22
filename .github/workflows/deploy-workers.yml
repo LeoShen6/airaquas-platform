@@ -1,0 +1,23 @@
+name: Deploy Workers
+on:
+  push:
+    branches: [main]
+    paths: ['workers/**', 'shared/**', 'wrangler.toml']
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install
+        working-directory: workers/api-auth
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          workingDirectory: workers/api-auth
+          command: deploy
