@@ -1,0 +1,8 @@
+name = "airaquas-api-assets"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "airaquas-hair"

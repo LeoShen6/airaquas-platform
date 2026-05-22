@@ -45,3 +45,7 @@ service = "airaquas-api-weapp"
 [[services]]
 binding = "SVC_COMMUNITY"
 service = "airaquas-api-community"
+
+[[services]]
+binding = "SVC_ASSETS"
+service = "airaquas-api-assets"
