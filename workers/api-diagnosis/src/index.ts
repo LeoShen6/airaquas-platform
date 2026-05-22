@@ -69,3 +69,4 @@ app.get('/api/diagnosis/:id', async (c) => {
 });
 
 export default app;
+// CI trigger
