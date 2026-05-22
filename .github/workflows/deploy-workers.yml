@@ -11,9 +11,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - name: Install Wrangler
-        run: npm install -g wrangler
+          node-version: 22
       - name: Deploy all workers
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
@@ -21,7 +19,7 @@ jobs:
           for worker in api-auth api-crm api-order api-inventory api-diagnosis api-marketing api-profit api-report; do
             echo "=== Deploying $worker ==="
             cd workers/$worker
-            npm install --include=dev
+            npm install
             npx wrangler deploy
             cd ../..
           done
