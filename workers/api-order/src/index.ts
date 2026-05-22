@@ -65,7 +65,7 @@ app.post('/api/orders/b2c', async (c) => {
 
   const order = await c.env.DB.prepare(
     'INSERT INTO orders (type, order_no, user_id, shop_id, total, status) VALUES (?, ?, ?, ?, ?, ?) RETURNING id'
-  ).bind('b2c', orderNo, user_id, shop_id, total, 'pending').first();
+  ).bind('b2c', orderNo, user_id, shop_id || null, total, 'pending').first();
 
   for (const item of items) {
     const product = await c.env.DB.prepare('SELECT price FROM products WHERE id = ?').bind(item.product_id).first();
@@ -123,3 +123,126 @@ app.post('/api/products', async (c) => {
 });
 
 export default app;
+
+// ====== 购物车 ======
+
+// 获取购物车
+app.get('/api/cart/:user_id', async (c) => {
+  const userId = c.req.param('user_id');
+  let cart = await c.env.DB.prepare('SELECT id FROM cart WHERE user_id = ?').bind(userId).first() as any;
+  
+  if (!cart) {
+    await c.env.DB.prepare('INSERT INTO cart (user_id) VALUES (?)').bind(userId).run();
+    cart = await c.env.DB.prepare('SELECT id FROM cart WHERE user_id = ?').bind(userId).first() as any;
+  }
+
+  const items = await c.env.DB.prepare(
+    `SELECT ci.*, p.name, p.price, p.image_url, p.description 
+     FROM cart_items ci JOIN products p ON p.id = ci.product_id 
+     WHERE ci.cart_id = ? ORDER BY ci.created_at DESC`
+  ).bind(cart.id).all();
+
+  const total = items.results.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
+
+  return c.json({ cart_id: cart.id, items: items.results, total });
+});
+
+// 加入购物车
+app.post('/api/cart/add', async (c) => {
+  const { user_id, product_id, quantity = 1 } = await c.req.json();
+  if (!user_id || !product_id) return c.json({ error: '缺少必要信息' }, 400);
+
+  let cart = await c.env.DB.prepare('SELECT id FROM cart WHERE user_id = ?').bind(user_id).first() as any;
+  if (!cart) {
+    await c.env.DB.prepare('INSERT INTO cart (user_id) VALUES (?)').bind(user_id).run();
+    cart = await c.env.DB.prepare('SELECT id FROM cart WHERE user_id = ?').bind(user_id).first() as any;
+  }
+
+  // 检查是否已有该商品
+  const existing = await c.env.DB.prepare('SELECT id, quantity FROM cart_items WHERE cart_id = ? AND product_id = ?')
+    .bind(cart.id, product_id).first() as any;
+  
+  if (existing) {
+    await c.env.DB.prepare('UPDATE cart_items SET quantity = quantity + ? WHERE id = ?')
+      .bind(quantity, existing.id).run();
+  } else {
+    await c.env.DB.prepare('INSERT INTO cart_items (cart_id, product_id, quantity) VALUES (?, ?, ?)')
+      .bind(cart.id, product_id, quantity).run();
+  }
+
+  await c.env.DB.prepare('UPDATE cart SET updated_at = datetime(\'now\') WHERE id = ?').bind(cart.id).run();
+  return c.json({ success: true });
+});
+
+// 更新购物车数量
+app.put('/api/cart/item/:item_id', async (c) => {
+  const { quantity } = await c.req.json();
+  await c.env.DB.prepare('UPDATE cart_items SET quantity = ? WHERE id = ?')
+    .bind(quantity, c.req.param('item_id')).run();
+  return c.json({ success: true });
+});
+
+// 删除购物车商品
+app.delete('/api/cart/item/:item_id', async (c) => {
+  await c.env.DB.prepare('DELETE FROM cart_items WHERE id = ?').bind(c.req.param('item_id')).run();
+  return c.json({ success: true });
+});
+
+// 清空购物车
+app.delete('/api/cart/:user_id', async (c) => {
+  const cart = await c.env.DB.prepare('SELECT id FROM cart WHERE user_id = ?').bind(c.req.param('user_id')).first() as any;
+  if (cart) {
+    await c.env.DB.prepare('DELETE FROM cart_items WHERE cart_id = ?').bind(cart.id).run();
+  }
+  return c.json({ success: true });
+});
+
+// ====== 支付 ======
+
+// 创建支付（微信支付模拟）
+app.post('/api/payments/create', async (c) => {
+  const { order_id, method = 'wechat' } = await c.req.json();
+  if (!order_id) return c.json({ error: '缺少订单ID' }, 400);
+
+  const order = await c.env.DB.prepare('SELECT * FROM orders WHERE id = ?').bind(order_id).first() as any;
+  if (!order) return c.json({ error: '订单不存在' }, 404);
+  if (order.status !== 'pending') return c.json({ error: '订单状态异常' }, 400);
+
+  // 微信支付统一下单（模拟返回 prepay_id）
+  const prepayId = 'wx' + Date.now().toString(36).toUpperCase();
+
+  // 生产环境需调用: POST https://api.weixin.qq.com/pay/unifiedorder
+  // 需参数: appid, mch_id, nonce_str, sign, body, out_trade_no, total_fee, spbill_create_ip, notify_url, trade_type
+
+  await c.env.DB.prepare("UPDATE orders SET status = 'paid', paid_at = datetime('now') WHERE id = ?").bind(order_id).run();
+
+  return c.json({
+    success: true,
+    payment: {
+      prepay_id: prepayId,
+      nonce_str: crypto.randomUUID().replace(/-/g, '').slice(0, 16),
+      timestamp: Math.floor(Date.now() / 1000).toString(),
+      package: `prepay_id=${prepayId}`,
+      sign_type: 'MD5',
+      // 前端用以上参数调起 wx.requestPayment
+    },
+  });
+});
+
+// 支付回调通知
+app.post('/api/payments/notify', async (c) => {
+  const body = await c.req.text();
+  // 验证微信签名...
+  const orderId = 'extracted_from_xml'; // 解析 XML 获取
+  await c.env.DB.prepare("UPDATE orders SET status='paid', paid_at=datetime('now') WHERE id=?").bind(orderId).run();
+  return new Response('<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>', {
+    headers: { 'Content-Type': 'application/xml' },
+  });
+});
+
+// 查询支付状态
+app.get('/api/payments/status/:order_id', async (c) => {
+  const order = await c.env.DB.prepare('SELECT status, paid_at FROM orders WHERE id=?')
+    .bind(c.req.param('order_id')).first();
+  return c.json(order || { error: '订单不存在' }, order ? 200 : 404);
+});

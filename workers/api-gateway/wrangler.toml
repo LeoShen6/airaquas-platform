@@ -33,3 +33,15 @@ service = "airaquas-api-profit"
 [[services]]
 binding = "SVC_REPORT"
 service = "airaquas-api-report"
+
+[[services]]
+binding = "SVC_PRODUCT"
+service = "airaquas-api-product"
+
+[[services]]
+binding = "SVC_WEAPP"
+service = "airaquas-api-weapp"
+
+[[services]]
+binding = "SVC_COMMUNITY"
+service = "airaquas-api-community"

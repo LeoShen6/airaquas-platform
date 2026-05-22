@@ -11,9 +11,15 @@ type Env = {
   SVC_MARKETING: Fetcher;
   SVC_PROFIT: Fetcher;
   SVC_REPORT: Fetcher;
+  SVC_PRODUCT: Fetcher;
+  SVC_WEAPP: Fetcher;
+  SVC_COMMUNITY: Fetcher;
 };
 
 const SERVICES: Record<string, keyof Env> = {
+  product:    'SVC_PRODUCT',
+  weapp:      'SVC_WEAPP',
+  community:  'SVC_COMMUNITY',
   auth:      'SVC_AUTH',
   crm:       'SVC_CRM',
   order:     'SVC_ORDER',
