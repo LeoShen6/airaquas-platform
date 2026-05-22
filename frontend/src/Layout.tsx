@@ -1,6 +1,7 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, ShoppingCart, Package, Stethoscope, Megaphone, DollarSign, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Users, ShoppingCart, Package, Stethoscope, Megaphone, DollarSign, LogOut, Menu, X, UserCircle } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from './hooks/useAuth';
 
 const navItems = [
   { path: '/', label: '仪表盘', icon: LayoutDashboard },
@@ -15,6 +16,12 @@ const navItems = [
 export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -61,7 +68,7 @@ export default function Layout() {
 
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
           <button
-            onClick={() => navigate('/login')}
+            onClick={handleLogout}
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 w-full"
           >
             <LogOut size={18} />
@@ -77,7 +84,12 @@ export default function Layout() {
             <Menu size={20} />
           </button>
           <div className="flex items-center gap-4 ml-auto">
-            <span className="text-sm text-gray-500">安柯耳总部</span>
+            {user && (
+              <div className="flex items-center gap-2">
+                <UserCircle size={18} className="text-amber-600" />
+                <span className="text-sm text-gray-600">{user.name}</span>
+              </div>
+            )}
           </div>
         </header>
 
