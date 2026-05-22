@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const AUTH_API = 'https://airaquas-api-auth.jfh-099.workers.dev';
+const AUTH_API = 'https://api.airaquas.hair/auth';
 
 export interface User {
   id: string;

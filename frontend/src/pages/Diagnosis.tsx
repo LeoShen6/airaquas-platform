@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Stethoscope, Activity, Sparkles, Cpu, Lightbulb, FlaskConical, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 
-const API = 'https://airaquas-api-diagnosis.jfh-099.workers.dev';
+const API = 'https://api.airaquas.hair/diagnosis';
 
 const questions = [
   { key: 'oily', label: '头皮出油程度', options: [

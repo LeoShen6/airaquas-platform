@@ -1,0 +1,35 @@
+name = "airaquas-api-gateway"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+[[services]]
+binding = "SVC_AUTH"
+service = "airaquas-api-auth"
+
+[[services]]
+binding = "SVC_CRM"
+service = "airaquas-api-crm"
+
+[[services]]
+binding = "SVC_ORDER"
+service = "airaquas-api-order"
+
+[[services]]
+binding = "SVC_INVENTORY"
+service = "airaquas-api-inventory"
+
+[[services]]
+binding = "SVC_DIAGNOSIS"
+service = "airaquas-api-diagnosis"
+
+[[services]]
+binding = "SVC_MARKETING"
+service = "airaquas-api-marketing"
+
+[[services]]
+binding = "SVC_PROFIT"
+service = "airaquas-api-profit"
+
+[[services]]
+binding = "SVC_REPORT"
+service = "airaquas-api-report"
