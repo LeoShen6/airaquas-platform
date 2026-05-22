@@ -12,12 +12,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install dependencies
-        run: npm install
-        working-directory: workers/api-auth
-      - name: Deploy to Cloudflare
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: workers/api-auth
-          command: deploy
+      - name: Install Wrangler
+        run: npm install -g wrangler
+      - name: Deploy all workers
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: |
+          for worker in api-auth api-crm api-order api-inventory api-diagnosis api-marketing api-profit api-report; do
+            echo "=== Deploying $worker ==="
+            cd workers/$worker
+            npm install --include=dev
+            npx wrangler deploy
+            cd ../..
+          done
