@@ -1,0 +1,66 @@
+<!-- 首页 -->
+<view class="page">
+  <!-- Banner -->
+  <view class="banner">
+    <swiper indicator-dots autoplay circular interval="4000">
+      <swiper-item>
+        <view class="banner-slide" style="background: linear-gradient(135deg, #2D7D46, #4ade80);">
+          <view class="banner-text">
+            <text class="banner-title">安柯耳益生菌系列</text>
+            <text class="banner-sub">从头皮开始，养出健康秀发</text>
+          </view>
+        </view>
+      </swiper-item>
+      <swiper-item>
+        <view class="banner-slide" style="background: linear-gradient(135deg, #8B5CF6, #c084fc);">
+          <view class="banner-text">
+            <text class="banner-title">AI 头皮检测</text>
+            <text class="banner-sub">3分钟了解你的头皮状况</text>
+          </view>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- Quick Actions -->
+  <view class="quick-actions">
+    <view class="action-item" bindtap="goScalpMatch">
+      <text class="action-icon">🔬</text>
+      <text class="action-label">AI检测</text>
+    </view>
+    <view class="action-item" bindtap="goAllProducts">
+      <text class="action-icon">🧴</text>
+      <text class="action-label">全部产品</text>
+    </view>
+    <view class="action-item">
+      <text class="action-icon">📖</text>
+      <text class="action-label">头皮知识</text>
+    </view>
+    <view class="action-item" bindtap="goProducts">
+      <text class="action-icon">🎯</text>
+      <text class="action-label">按发质选</text>
+    </view>
+  </view>
+
+  <!-- Product Section -->
+  <view class="section-header">
+    <text class="section-title">推荐产品</text>
+    <text class="section-more" bindtap="goAllProducts">查看全部 ›</text>
+  </view>
+
+  <view class="product-grid">
+    <view class="product-card" wx:for="{{products}}" wx:key="id" data-id="{{item.id}}" bindtap="goProduct">
+      <image class="product-image" src="{{item.image_url}}" mode="aspectFit" lazy-load />
+      <view class="product-info">
+        <text class="product-name">{{item.name}}</text>
+        <text class="product-price">¥{{item.price}}</text>
+        <view class="product-tags">
+          <text class="tag" wx:for="{{item.tags || []}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Loading -->
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+</view>

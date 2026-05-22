@@ -1,0 +1,64 @@
+/* 购物车 */
+.page { padding-bottom: 70px; }
+
+.empty-cart {
+  display: flex; flex-direction: column;
+  align-items: center; padding: 80px 20px;
+}
+.empty-icon { font-size: 64px; margin-bottom: 16px; }
+.empty-text { font-size: 16px; color: #999; margin-bottom: 24px; }
+.empty-cart .btn-primary { width: 200px; }
+
+.select-all {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px; background: white;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px; color: #333;
+}
+.edit-btn { margin-left: auto; color: #2D7D46; }
+.checkbox {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid #ddd; flex-shrink: 0;
+}
+.checkbox.checked {
+  background: #2D7D46; border-color: #2D7D46;
+  position: relative;
+}
+.checkbox.checked::after {
+  content: '✓'; color: white; font-size: 12px;
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cart-items { padding: 0; }
+.cart-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; background: white; border-bottom: 1px solid #f5f5f5;
+}
+.item-image { width: 80px; height: 80px; border-radius: 8px; }
+.item-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.item-name { font-size: 14px; font-weight: 600; color: #1c1917; }
+.item-price { font-size: 16px; color: #dc2626; font-weight: 700; }
+.item-qty { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
+.item-qty .qty-btn {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid #ddd; display: flex;
+  align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.item-qty text:nth-child(2) { min-width: 20px; text-align: center; }
+.delete-btn { color: #dc2626; font-size: 14px; text-align: right; }
+
+.bottom-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: white; padding: 10px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid #f0f0f0;
+}
+.total-section { display: flex; align-items: baseline; gap: 4px; }
+.total-price { font-size: 22px; font-weight: 700; color: #dc2626; }
+.btn-checkout {
+  background: linear-gradient(135deg, #2D7D46, #3b9b5a);
+  color: white; padding: 12px 32px; border-radius: 8px;
+  font-size: 16px; font-weight: 600;
+}

@@ -1,0 +1,50 @@
+<!-- 购物车 -->
+<view class="page">
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+
+  <block wx:elif="{{cartItems.length === 0}}">
+    <view class="empty-cart">
+      <text class="empty-icon">🛒</text>
+      <text class="empty-text">购物车是空的</text>
+      <view class="btn-primary" bindtap="goProducts">去逛逛</view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <!-- Select All -->
+    <view class="select-all" bindtap="toggleAll">
+      <view class="checkbox {{selectedIds.length === cartItems.length ? 'checked' : ''}}"></view>
+      <text>全选</text>
+      <text class="edit-btn" bindtap="toggleEdit" catchtap>{{editing ? '完成' : '编辑'}}</text>
+    </view>
+
+    <!-- Cart Items -->
+    <view class="cart-items">
+      <view class="cart-item" wx:for="{{cartItems}}" wx:key="id" data-id="{{item.id}}">
+        <view class="checkbox {{selectedIds.indexOf(item.id) > -1 ? 'checked' : ''}}" bindtap="toggleSelect" data-id="{{item.id}}"></view>
+        <image class="item-image" src="{{item.image_url || 'https://airaquas-api-assets.jfh-099.workers.dev/products/prod-probiotic-shampoo.svg'}}" mode="aspectFit" />
+        <view class="item-info">
+          <text class="item-name">{{item.name || item.product_name}}</text>
+          <text class="item-price" wx:if="{{!editing}}">¥{{(item.unit_price || item.price || 0).toFixed(2)}}</text>
+          <view class="item-qty" wx:if="{{!editing}}">
+            <view class="qty-btn" data-id="{{item.id}}" data-delta="{{-1}}" bindtap="changeQty">−</view>
+            <text>{{item.quantity}}</text>
+            <view class="qty-btn" data-id="{{item.id}}" data-delta="{{1}}" bindtap="changeQty">+</view>
+          </view>
+          <view class="delete-btn" wx:if="{{editing}}" bindtap="removeItem" data-id="{{item.id}}">删除</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Bottom Bar -->
+    <view class="bottom-bar">
+      <view class="total-section">
+        <text>合计: </text>
+        <text class="total-price">¥{{totalPrice.toFixed(2)}}</text>
+      </view>
+      <view class="btn-checkout" bindtap="checkout">
+        结算 ({{selectedIds.length}})
+      </view>
+    </view>
+  </block>
+</view>

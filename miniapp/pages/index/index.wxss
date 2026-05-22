@@ -1,0 +1,51 @@
+/* 首页 */
+.page { padding-bottom: 20px; }
+
+/* Banner */
+.banner { height: 200px; width: 100%; }
+.banner swiper, .banner swiper-item { height: 100%; width: 100%; }
+.banner-slide {
+  height: 100%; width: 100%;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 40px; box-sizing: border-box;
+}
+.banner-text { display: flex; flex-direction: column; align-items: center; }
+.banner-title { color: white; font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+.banner-sub { color: rgba(255,255,255,0.85); font-size: 14px; }
+
+/* Quick Actions */
+.quick-actions {
+  display: flex; justify-content: space-around;
+  padding: 20px 16px; background: white;
+  margin: 12px 12px; border-radius: 12px;
+}
+.action-item { display: flex; flex-direction: column; align-items: center; }
+.action-icon { font-size: 28px; margin-bottom: 6px; }
+.action-label { font-size: 12px; color: #666; }
+
+/* Section */
+.section-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 16px 8px;
+}
+.section-title { font-size: 18px; font-weight: 700; color: #1c1917; }
+.section-more { font-size: 13px; color: #2D7D46; }
+
+/* Product Grid */
+.product-grid {
+  display: flex; flex-wrap: wrap;
+  padding: 4px 12px; gap: 12px;
+}
+.product-card {
+  width: calc(50% - 6px);
+  background: white; border-radius: 12px;
+  padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  box-sizing: border-box;
+}
+.product-image {
+  width: 100%; height: 160px;
+  margin-bottom: 8px; border-radius: 8px;
+}
+.product-name { font-size: 14px; font-weight: 600; color: #1c1917; display: block; margin-bottom: 4px; }
+.product-price { color: #dc2626; font-size: 18px; font-weight: 700; display: block; margin-bottom: 6px; }
+.product-tags { display: flex; flex-wrap: wrap; gap: 4px; }

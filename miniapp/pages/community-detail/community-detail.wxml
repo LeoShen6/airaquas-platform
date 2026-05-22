@@ -1,0 +1,39 @@
+<!-- 帖子详情 -->
+<view class="page">
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+
+  <block wx:elif="{{post}}">
+    <view class="post-card">
+      <view class="post-header">
+        <image class="avatar" src="{{post.avatar_url || ''}}" mode="aspectFit" />
+        <view>
+          <text class="nickname">{{post.nickname || '匿名'}}</text>
+          <text class="time">{{formatDate(post.created_at)}}</text>
+        </view>
+      </view>
+      <text class="content">{{post.content}}</text>
+      <view class="post-stats">
+        <text>❤️ {{post.like_count || 0}}</text>
+        <text>💬 {{post.comment_count || 0}}</text>
+      </view>
+    </view>
+
+    <!-- Comments -->
+    <view class="comments-section">
+      <text class="comments-title">评论 ({{comments.length}})</text>
+      <view class="comment" wx:for="{{comments}}" wx:key="id">
+        <text class="comment-user">{{item.nickname || '匿名'}}:</text>
+        <text class="comment-text">{{item.content}}</text>
+        <text class="comment-time">{{formatDate(item.created_at)}}</text>
+      </view>
+      <text class="empty" wx:if="{{comments.length === 0}}">暂无评论</text>
+    </view>
+  </block>
+
+  <!-- Comment input -->
+  <view class="comment-bar">
+    <input class="comment-input" placeholder="说点什么..." 
+           value="{{commentInput}}" bindinput="onCommentInput" />
+    <view class="comment-send" bindtap="submitComment">发送</view>
+  </view>
+</view>

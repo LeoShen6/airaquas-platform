@@ -1,0 +1,51 @@
+/* 产品详情 */
+.product-image-wrap {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  padding: 20px; text-align: center;
+}
+.product-image { width: 80%; height: 300px; }
+
+.product-info-section {
+  background: white; padding: 20px 16px;
+  margin: 0 0 12px; border-radius: 12px; margin: 12px;
+}
+.product-name { font-size: 20px; font-weight: 700; color: #1c1917; display: block; margin-bottom: 8px; }
+.product-price { font-size: 28px; color: #dc2626; font-weight: 700; display: block; margin-bottom: 8px; }
+.product-tags { margin-bottom: 12px; display: flex; flex-wrap: wrap; gap: 4px; }
+.product-desc { font-size: 14px; color: #666; line-height: 1.6; }
+
+.quantity-section {
+  background: white; margin: 0 12px 12px; border-radius: 12px;
+  padding: 16px; display: flex; justify-content: space-between; align-items: center;
+}
+.quantity-label { font-size: 14px; color: #333; }
+.quantity-control { display: flex; align-items: center; gap: 16px; }
+.qty-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid #ddd; display: flex;
+  align-items: center; justify-content: center;
+  font-size: 18px; color: #333;
+}
+.qty-num { font-size: 18px; font-weight: 600; min-width: 24px; text-align: center; }
+
+/* Bottom Bar */
+.bottom-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: white; padding: 10px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid #f0f0f0; box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+}
+.bottom-left { display: flex; flex-direction: column; }
+.total-label { font-size: 12px; color: #999; }
+.total-price { font-size: 22px; font-weight: 700; color: #dc2626; }
+.bottom-actions { display: flex; gap: 10px; }
+.btn-cart {
+  background: white; color: #2D7D46; border: 1.5px solid #2D7D46;
+  padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600;
+}
+.btn-buy {
+  background: linear-gradient(135deg, #2D7D46, #3b9b5a); color: white;
+  padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600;
+}
+
+.page { padding-bottom: 70px; }

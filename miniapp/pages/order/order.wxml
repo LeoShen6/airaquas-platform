@@ -1,0 +1,43 @@
+<!-- 下单页 -->
+<view class="page">
+  <!-- Address -->
+  <view class="address-section">
+    <text class="address-icon">📍</text>
+    <view class="address-info">
+      <text class="address-name">请添加收货地址</text>
+    </view>
+    <text class="arrow">›</text>
+  </view>
+
+  <!-- Order Items -->
+  <view class="order-items">
+    <view class="order-item" wx:for="{{items}}" wx:key="id">
+      <image class="item-image" src="{{item.image_url || 'https://airaquas-api-assets.jfh-099.workers.dev/products/prod-probiotic-shampoo.svg'}}" mode="aspectFit" />
+      <view class="item-info">
+        <text class="item-name">{{item.name}}</text>
+        <text class="item-price">¥{{(item.unit_price || item.price || 0).toFixed(2)}}</text>
+        <text class="item-qty">×{{item.quantity || 1}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Summary -->
+  <view class="summary">
+    <view class="summary-row">
+      <text>商品合计</text>
+      <text class="price">¥{{total.toFixed(2)}}</text>
+    </view>
+    <view class="summary-row">
+      <text>运费</text>
+      <text class="free">免运费</text>
+    </view>
+  </view>
+
+  <view class="submit-bar">
+    <view class="actual-total">
+      <text class="label">实付:</text>
+      <text class="price">¥{{total.toFixed(2)}}</text>
+    </view>
+    <view class="btn-submit" bindtap="submitOrder">提交订单</view>
+  </view>
+</view>

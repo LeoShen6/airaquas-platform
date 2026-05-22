@@ -1,0 +1,43 @@
+<!-- 产品详情 -->
+<view class="page">
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+
+  <block wx:elif="{{product}}">
+    <!-- Image -->
+    <view class="product-image-wrap">
+      <image class="product-image" src="{{product.image_url}}" mode="aspectFit" />
+    </view>
+
+    <!-- Info -->
+    <view class="product-info-section">
+      <text class="product-name">{{product.name}}</text>
+      <text class="product-price">¥{{product.price}}</text>
+      <view class="product-tags">
+        <text class="tag" wx:for="{{product.tags || []}}" wx:key="*this">{{item}}</text>
+      </view>
+      <text class="product-desc">{{product.description}}</text>
+    </view>
+
+    <!-- Quantity Selector -->
+    <view class="quantity-section">
+      <text class="quantity-label">数量</text>
+      <view class="quantity-control">
+        <view class="qty-btn" bindtap="decrease">−</view>
+        <text class="qty-num">{{quantity}}</text>
+        <view class="qty-btn" bindtap="increase">+</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- Bottom Bar -->
+  <view class="bottom-bar">
+    <view class="bottom-left">
+      <text class="total-label">合计</text>
+      <text class="total-price" wx:if="{{product}}">¥{{(product.price * quantity).toFixed(2)}}</text>
+    </view>
+    <view class="bottom-actions">
+      <view class="btn-cart" bindtap="addToCart">加入购物车</view>
+      <view class="btn-buy" bindtap="buyNow">立即购买</view>
+    </view>
+  </view>
+</view>

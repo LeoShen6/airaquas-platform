@@ -1,0 +1,21 @@
+<!-- 登录页 -->
+<view class="page">
+  <view class="login-container">
+    <view class="logo-area">
+      <text class="logo-icon">🌿</text>
+      <text class="logo-title">安柯耳</text>
+      <text class="logo-sub">毛发健康管理平台</text>
+    </view>
+
+    <view class="login-card">
+      <text class="login-title">微信授权登录</text>
+      <text class="login-desc">授权后即可使用全部功能</text>
+
+      <button class="wx-login-btn" bindtap="wxLogin" type="primary" open-type="getUserInfo">
+        <text>微信一键登录</text>
+      </button>
+
+      <text class="login-tip">登录即表示同意《用户协议》和《隐私政策》</text>
+    </view>
+  </view>
+</view>

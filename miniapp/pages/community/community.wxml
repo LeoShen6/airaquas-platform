@@ -1,0 +1,53 @@
+<!-- 社区 -->
+<view class="page">
+  <!-- Publish Button -->
+  <view class="publish-bar">
+    <text class="publish-text" bindtap="togglePublish">分享你的头皮护理心得...</text>
+    <text class="publish-icon" bindtap="togglePublish">✏️</text>
+  </view>
+
+  <!-- Publish Form -->
+  <view class="publish-form" wx:if="{{showPublish}}">
+    <textarea class="publish-input" placeholder="写下你的想法..." 
+              value="{{publishContent}}" bindinput="onContentInput" maxlength="500" auto-height />
+    <view class="publish-actions">
+      <text class="publish-cancel" bindtap="togglePublish">取消</text>
+      <view class="publish-submit" bindtap="publishPost">发布</view>
+    </view>
+  </view>
+
+  <!-- Posts -->
+  <view class="loading" wx:if="{{loading && posts.length === 0}}">加载中...</view>
+
+  <view class="posts">
+    <view class="post-card" wx:for="{{posts}}" wx:key="id" data-id="{{item.id}}" bindtap="goPost">
+      <view class="post-header">
+        <image class="post-avatar" src="{{item.avatar_url || 'https://airaquas-api-assets.jfh-099.workers.dev/products/prod-probiotic-shampoo.svg'}}" mode="aspectFit" />
+        <view class="post-user">
+          <text class="post-nickname">{{item.nickname || '匿名用户'}}</text>
+          <text class="post-time">{{formatDate(item.created_at)}}</text>
+        </view>
+      </view>
+      <text class="post-content">{{item.content}}</text>
+      <view class="post-images" wx:if="{{item.images}}">
+        <image wx:for="{{item.images.split(',')}}" wx:key="*this" src="{{item}}" mode="aspectFill" />
+      </view>
+      <view class="post-actions">
+        <view class="post-action like {{item.liked ? 'liked' : ''}}" 
+              bindtap="likePost" catchtap data-id="{{item.id}}">
+          <text>{{item.liked ? '❤️' : '🤍'}}</text>
+          <text>{{item.like_count || 0}}</text>
+        </view>
+        <view class="post-action">
+          <text>💬</text>
+          <text>{{item.comment_count || 0}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="loading" wx:if="{{loading && posts.length > 0}}">加载更多...</view>
+  <view class="empty" wx:elif="{{!loading && posts.length === 0}}">
+    <text>暂无内容，快来分享你的护理心得吧</text>
+  </view>
+</view>

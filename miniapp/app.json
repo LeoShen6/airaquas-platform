@@ -1,0 +1,35 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/products/products",
+    "pages/product/product",
+    "pages/cart/cart",
+    "pages/order/order",
+    "pages/login/login",
+    "pages/community/community",
+    "pages/community-detail/community-detail",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "navigationBarTitleText": "安柯耳毛发健康",
+    "navigationBarBackgroundColor": "#fef3c7",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#fefce8"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#2D7D46",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页", "iconPath": "images/tab-home.png", "selectedIconPath": "images/tab-home-active.png" },
+      { "pagePath": "pages/community/community", "text": "社区", "iconPath": "images/tab-community.png", "selectedIconPath": "images/tab-community-active.png" },
+      { "pagePath": "pages/cart/cart", "text": "购物车", "iconPath": "images/tab-cart.png", "selectedIconPath": "images/tab-cart-active.png" },
+      { "pagePath": "pages/profile/profile", "text": "我的", "iconPath": "images/tab-profile.png", "selectedIconPath": "images/tab-profile-active.png" }
+    ]
+  },
+  "usingComponents": {},
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
