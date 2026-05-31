@@ -3,9 +3,22 @@ main = "src/index.ts"
 compatibility_date = "2024-12-01"
 
 routes = [
-  "airaquas.hair/fenzhen*",
-  "airaquas.hair/guide*", 
-  "airaquas.hair/research*",
-  "airaquas.hair/sebderm*",
-  "airaquas.hair/api/generate-poster",
+  { pattern = "airaquas.hair/fenzhen", custom_domain = false },
+  { pattern = "airaquas.hair/fenzhen/*", custom_domain = false },
+  { pattern = "airaquas.hair/guide", custom_domain = false },
+  { pattern = "airaquas.hair/guide/*", custom_domain = false },
+  { pattern = "airaquas.hair/research", custom_domain = false },
+  { pattern = "airaquas.hair/research/*", custom_domain = false },
+  { pattern = "airaquas.hair/sebderm", custom_domain = false },
+  { pattern = "airaquas.hair/sebderm/*", custom_domain = false },
+  { pattern = "airaquas.hair/postpartum", custom_domain = false },
+  { pattern = "airaquas.hair/postpartum/*", custom_domain = false },
+  { pattern = "airaquas.hair/alopecia-areata", custom_domain = false },
+  { pattern = "airaquas.hair/alopecia-areata/*", custom_domain = false },
+  { pattern = "airaquas.hair/seasonal", custom_domain = false },
+  { pattern = "airaquas.hair/seasonal/*", custom_domain = false },
+  { pattern = "airaquas.hair/dandruff", custom_domain = false },
+  { pattern = "airaquas.hair/dandruff/*", custom_domain = false },
+  { pattern = "airaquas.hair/folliculitis", custom_domain = false },
+  { pattern = "airaquas.hair/folliculitis/*", custom_domain = false },
 ]
