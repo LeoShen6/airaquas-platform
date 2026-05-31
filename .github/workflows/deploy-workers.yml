@@ -2,7 +2,7 @@ name: Deploy Workers
 on:
   push:
     branches: [main]
-    paths: ['workers/**', 'shared/**', 'wrangler.toml', 'src/**']
+    paths: ['workers/**', 'shared/**', 'wrangler.toml', 'src/**', '.github/**']
 
 jobs:
   deploy:
@@ -16,14 +16,13 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
-          for worker in api-auth api-crm api-order api-inventory api-diagnosis api-marketing api-profit api-report api-public api-weapp api-assets api-community; do
+          for worker in api-gateway api-auth api-crm api-order api-inventory api-diagnosis api-marketing api-profit api-report api-public api-weapp api-assets api-community; do
             echo "=== Deploying $worker ==="
             cd workers/$worker
             npm install
             npx wrangler deploy
             cd ../..
           done
-          # Deploy root Worker with catch-all routes
           echo "=== Deploying root Worker (airaquas-platform) ==="
           npm init -y --silent
           npm install hono

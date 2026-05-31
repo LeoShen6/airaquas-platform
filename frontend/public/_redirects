@@ -1,5 +1,12 @@
-# Force 301 redirect to Worker-handled path
-
-# Force browser to leave the old SPA URL
+# Redirect ALL old SPA paths to Worker content
+/  /fenzhen/  301
 /detect*  /fenzhen/detect  301
 /diagnosis*  /fenzhen/detect  301
+/login  301
+/members  301
+/orders  301
+/inventory  301
+/marketing  301
+/profit  301
+/api/*  /fenzhen/detect  301
+/*  /fenzhen/  301
