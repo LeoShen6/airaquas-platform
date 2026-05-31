@@ -115,85 +115,7 @@ pageMap['folliculitis'] = page('头皮毛囊炎原因与护理 - 安柯耳 Airaq
     {"@type":"Question","name":"毛囊炎会脱发？","acceptedAnswer":{"@type":"Answer","text":"单次不会。反复发作可致毛囊闭锁。和脂溢性皮炎机制完全不同，AI可区分。"}}]},
   {"@context":"https://schema.org","@type":"MedicalWebPage","about":{"@type":"MedicalCondition","name":"毛囊炎"}}
 ], `<div class="card"><span class="tag">FAQ</span><h3>头皮痘痘是毛囊炎？</h3><p>发红有白头伴瘙痒或疼痛→细菌感染。</p><div class="highlight">反复发作可致毛囊闭锁→瘢痕性脱发。</div></div>`);
-pageMap['detect'] = page('AI 头皮健康检测 - 安柯耳 Airaquas', '上传照片AI分析，3分钟出科学报告。免费检测。', '/fenzhen/detect/', [
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-    {"@type":"Question","name":"AI头皮检测怎么用？","acceptedAnswer":{"@type":"Answer","text":"上传发际线/头顶照片，AI自动分析毛囊密度、油脂分泌、屏障状态，3分钟出报告。免费。"}},
-    {"@type":"Question","name":"检测准确吗？","acceptedAnswer":{"@type":"Answer","text":"基于万张头皮影像训练的模型，准确率92%。报告包含4个维度：油脂、水分、密度、健康度。"}},
-    {"@type":"Question","name":"需要去医院吗？","acceptedAnswer":{"@type":"Answer","text":"AI检测为初步筛查。发现异常（如斑片状脱发、红斑鳞屑）建议就医确诊。"}}
-  ]},
-  {"@context":"https://schema.org","@type":"Organization","name":"安柯耳 Airaquas","description":"AI头皮健康媒体","url":"https://airaquas.hair/fenzhen/detect"}
-], `<div id="app">
-  <div id="upload-phase" style="text-align:center;padding:10px 0">
-    <div onclick="document.getElementById('fi').click()" style="border:2px dashed rgba(255,255,255,.06);border-radius:16px;padding:36px 16px;cursor:pointer;transition:.3s">
-      <div style="font-size:34px;margin-bottom:6px">📱</div>
-      <div style="font-size:14px;color:rgba(255,255,255,.45)">点击上传头皮照片</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.2);margin-top:4px">自然光下拍摄发际线和头顶</div>
-      <input type="file" id="fi" accept="image/*" style="display:none"/>
-      <img id="pv" alt="" style="width:100%;border-radius:10px;display:none;margin-top:10px;max-height:320px;object-fit:cover"/>
-    </div>
-  </div>
-  <div id="loading-phase" style="display:none;text-align:center;padding:60px 0">
-    <div style="width:70px;height:70px;margin:0 auto;border:4px solid rgba(201,169,110,.15);border-top-color:#c8a96e;border-radius:50%;animation:s 1s linear infinite"></div>
-    <div style="color:#c8a96e;font-size:14px;letter-spacing:2px;margin-top:16px">AI 分析中...</div>
-    <div id="od" style="color:rgba(255,255,255,.3);font-size:12px;margin-top:6px">准备识别</div>
-  </div>
-  <div id="result-phase" style="display:none">
-    <div style="width:112px;height:112px;border-radius:50%;margin:0 auto;position:relative;background:conic-gradient(#c8a96e var(--p,75%),rgba(255,255,255,.03) 0)" id="sc">
-      <div style="position:absolute;inset:5px;border-radius:50%;background:#0a0a12;display:flex;flex-direction:column;align-items:center;justify-content:center">
-        <div id="sn" style="font-size:36px;font-weight:800;color:#c8a96e;line-height:1">78</div>
-        <div style="font-size:10px;color:rgba(255,255,255,.2);letter-spacing:2px">综合评分</div>
-      </div>
-    </div>
-    <div style="text-align:center;font-size:18px;font-weight:700;color:#f0ece4;margin:10px 0 2px" id="ht">混合性</div>
-    <div style="text-align:center;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:16px" id="sm"></div>
-    <div style="font-size:14px;font-weight:600;color:#e8e4dc;margin:16px 0 10px">📊 四维分析</div><div id="dc"></div>
-    <div style="font-size:14px;font-weight:600;color:#e8e4dc;margin:16px 0 10px">💡 护理建议</div><div id="tc"></div>
-    <div style="text-align:center;margin-top:20px;padding:20px;background:radial-gradient(ellipse at center,rgba(201,169,110,.04),transparent 70%);border:1px solid rgba(255,255,255,.04);border-radius:12px">
-      <h2 style="color:#e8e4dc;font-size:14px;margin:0 0 4px">🎯 分享检测结果</h2>
-      <p style="font-size:11px;color:rgba(255,255,255,.3);margin-bottom:10px">生成专属海报</p>
-      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-        <button onclick="gp()" style="padding:8px 22px;background:linear-gradient(135deg,#c8a96e,#b89550);color:#0a0a12;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer">✨ 生成海报</button>
-        <button onclick="sr()" style="padding:8px 16px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);color:#d0d0d8;border-radius:8px;font-size:12px;cursor:pointer">📤 分享</button>
-        <button onclick="rst()" style="padding:8px 16px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.3);border-radius:8px;font-size:12px;cursor:pointer">🔄 重测</button>
-      </div>
-    </div>
-  </div>
-</div>
-<div id="tt" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:8px;font-size:13px;z-index:2000;background:rgba(10,10,18,.9);border:1px solid rgba(255,255,255,.04);display:none;max-width:300px;text-align:center;color:#fff"></div>
-<style>
-@keyframes s{to{transform:rotate(360deg)}}
-.dm{display:flex;align-items:center;margin-bottom:8px}
-.dm .l{width:50px;font-size:11px;color:rgba(255,255,255,.2);flex-shrink:0}
-.dm .b{flex:1;height:5px;background:rgba(255,255,255,.03);border-radius:3px;overflow:hidden}
-.dm .f{height:100%;border-radius:3px;transition:width 1s ease}
-.dm .v{width:28px;text-align:right;font-size:11px;font-weight:600;flex-shrink:0}
-</style>
-<script>
-var S=["识别毛囊","分析油脂","评估屏障","计算密度","生成评分","完成"],C=null;
-var fi=document.getElementById('fi'),pv=document.getElementById('pv');
-fi.onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){pv.src=e.target.result;pv.style.display='block';st()};r.readAsDataURL(f)};
-function st(){document.getElementById('upload-phase').style.display='none';document.getElementById('loading-phase').style.display='block';var i=0,t=setInterval(function(){i++;document.getElementById('od').textContent=S[i];if(i>=6){clearInterval(t);dn()}},700)}
-function dn(){document.getElementById('loading-phase').style.display='none';document.getElementById('result-phase').style.display='block';
-var ts=['油性头皮','干性头皮','混合性头皮','敏感性头皮','健康头皮'],tp=ts[Math.floor(Math.random()*ts.length)],sc=Math.floor(Math.random()*30)+65;
-var ds=[{l:'油脂',s:tp=='油性头皮'?Math.floor(Math.random()*20)+40:Math.floor(Math.random()*35)+60},{l:'水分',s:Math.floor(Math.random()*30)+55},{l:'密度',s:Math.floor(Math.random()*25)+60},{l:'健康度',s:Math.floor(Math.random()*25)+65}];
-var tips=['用氨基酸表活温和清洁','每周1-2次深层清洁','水温38℃，指腹按摩','每2-3天洗一次'];
-if(tp=='敏感性头皮')tips[0]='暂停含香精酒精产品';C={sc,tp,ds,tips};
-document.getElementById('sn').textContent=sc;document.getElementById('sc').style.setProperty('--p',sc+'%');
-document.getElementById('ht').textContent=tp;document.getElementById('sm').textContent=sc>=80?'状态优秀':sc>=70?'基本健康':'需要开始护理';
-var dc=document.getElementById('dc');dc.innerHTML='';
-for(var i=0;i<ds.length;i++){var d=ds[i],c=d.s>=80?'#64c882':d.s>=65?'#64b4ff':'#e8d5b7';dc.innerHTML+='<div class="dm"><span class="l">'+d.l+'</span><div class="b"><div class="f" style="width:'+d.s+'%;background:'+c+'"></div></div><span class="v" style="color:'+c+'">'+d.s+'</span></div>'}
-var tc=document.getElementById('tc');tc.innerHTML='';
-for(var i=0;i<tips.length;i++)tc.innerHTML+='<p style="margin:0 0 5px;font-size:13px;color:rgba(255,255,255,.4);padding-left:12px">• '+tips[i]+'</p>';
-window.scrollTo({top:0,behavior:'smooth'})}
-function msg(m){var t=document.getElementById('tt');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(function(){t.style.display='none'},2500)}
-function rst(){C=null;document.getElementById('result-phase').style.display='none';document.getElementById('upload-phase').style.display='block';pv.style.display='none';document.getElementById('fi').value=''}
-async function gp(){if(!C){msg('先完成检测');return}msg('生成海报...');
-try{var w=window.open('/fenzhen/poster?s='+C.sc+'&t='+encodeURIComponent(C.tp)+'&kt='+Date.now(),'_blank','width=420,height=800');if(w)msg('海报已生成');else msg('请允许弹窗')}catch(e){msg('失败')}}
-function sr(){if(!C)return;
-var t='我的头皮健康分 '+C.sc+' 分！测测你的: airaquas.hair/detect';
-if(navigator.share)navigator.share({title:'安柯耳AI头皮检测',text:t}).catch(function(){});
-else navigator.clipboard.writeText(t).then(function(){msg('已复制')}).catch(function(){msg('截图分享')})}
-</script>`);
+
 
 //==================================================================
 //  POSTER API
@@ -242,14 +164,92 @@ app.get('/fenzhen/:slug/', (c) => {
 // Standalone (needs route registration)
 
 // Detect route
-app.get('/detect', (c) => {
-  const html = pageMap['detect'];
-  return html ? c.html(html) : c.html('<h1>AI 头皮健康检测</h1><p>先上传照片</p>');
-});
-app.get('/detect/', (c) => {
-  const html = pageMap['detect'];
-  return html ? c.html(html) : c.html('<h1>AI 头皮健康检测</h1><p>先上传照片</p>');
-});
+// Detect page (complete static HTML)
+const DETECT_HTML = `<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AI 头皮健康检测 - 安柯耳 Airaquas</title>
+<meta name="description" content="上传照片AI分析，3分钟出科学报告。免费检测。"/>
+<link rel="canonical" href="https://airaquas.hair/detect"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"AI头皮检测怎么用？","acceptedAnswer":{"@type":"Answer","text":"上传发际线/头顶照片，AI自动分析毛囊密度、油脂分泌、屏障状态，3分钟出报告。免费。"}},{"@type":"Question","name":"检测准确吗？","acceptedAnswer":{"@type":"Answer","text":"基于万张头皮影像训练的模型，准确率92%。报告包含4个维度：油脂、水分、密度、健康度。"}},{"@type":"Question","name":"需要去医院吗？","acceptedAnswer":{"@type":"Answer","text":"AI检测为初步筛查。发现异常（如斑片状脱发、红斑鳞屑）建议就医确诊。"}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"安柯耳 Airaquas","description":"AI头皮健康媒体","url":"https://airaquas.hair/detect"}</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans SC","PingFang SC",sans-serif;background:#0a0a12;color:#d0d0d8;line-height:1.6;overflow-x:hidden}
+.wrap{max-width:420px;margin:0 auto;padding:0 16px 80px}
+.hd{display:flex;align-items:center;justify-content:space-between;padding:12px 0;background:rgba(10,10,18,.92);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+.lg{font-size:14px;font-weight:700;color:#f0ece4;letter-spacing:1px}
+.lg span{color:#c8a96e;font-size:10px;display:block;letter-spacing:2px}
+.uz{border:2px dashed rgba(255,255,255,.06);border-radius:16px;padding:36px 16px;text-align:center;cursor:pointer;transition:.3s;background:rgba(255,255,255,.02)}
+.uz:hover{border-color:rgba(201,169,110,.2)}
+.uz img{width:100%;border-radius:10px;display:none;max-height:320px;object-fit:cover}
+.ov{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,10,18,.85);backdrop-filter:blur(8px);z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:center}
+.ov.active{display:flex}
+.sp{width:70px;height:70px;border:4px solid rgba(201,169,110,.15);border-top-color:#c8a96e;border-radius:50%;animation:s 1s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+.ov .t{color:#c8a96e;font-size:14px;letter-spacing:2px;margin-top:16px}
+.ov .d{color:rgba(255,255,255,.3);font-size:12px;margin-top:6px}.rp{display:none}
+.rp.active{display:block}
+.sc{width:112px;height:112px;border-radius:50%;margin:0 auto;position:relative;background:conic-gradient(#c8a96e var(--p,75%),rgba(255,255,255,.03) 0)}
+.sc::before{content:'';position:absolute;inset:5px;border-radius:50%;background:#0a0a12}
+.sc .n{position:relative;z-index:1;text-align:center;padding-top:28px;font-size:36px;font-weight:800;color:#c8a96e;line-height:1}
+.sc .l{position:relative;z-index:1;text-align:center;font-size:10px;color:rgba(255,255,255,.2);letter-spacing:2px}
+.ht{text-align:center;font-size:18px;font-weight:700;color:#f0ece4;margin:10px 0 2px}
+.sd{text-align:center;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:16px}
+.st{font-size:14px;font-weight:600;color:#e8e4dc;margin:16px 0 10px}
+.dm{display:flex;align-items:center;margin-bottom:8px}
+.dm .lb{width:50px;font-size:11px;color:rgba(255,255,255,.2);flex-shrink:0}
+.dm .br{flex:1;height:5px;background:rgba(255,255,255,.03);border-radius:3px;overflow:hidden}
+.dm .fl{height:100%;border-radius:3px;transition:width 1s ease}
+.dm .vl{width:28px;text-align:right;font-size:11px;font-weight:600;flex-shrink:0}
+.tc p{margin:0 0 5px;font-size:13px;color:rgba(255,255,255,.4);padding-left:12px}
+.ct{text-align:center;margin-top:20px;padding:20px;background:radial-gradient(ellipse at center,rgba(201,169,110,.04),transparent 70%);border:1px solid rgba(255,255,255,.04);border-radius:12px}
+.ct h2{color:#e8e4dc;font-size:14px;margin:0 0 4px}
+.ct p{font-size:11px;color:rgba(255,255,255,.3);margin-bottom:10px}
+.ct .as{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.bt{display:inline-block;padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;text-decoration:none}
+.bp{background:linear-gradient(135deg,#c8a96e,#b89550);color:#0a0a12}
+.bs{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);color:#d0d0d8;font-size:13px}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:8px;font-size:13px;z-index:2000;background:rgba(10,10,18,.9);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.04);display:none;max-width:300px;text-align:center;color:#fff}
+</style></head><body>
+<div class="wrap"><div class="hd"><div class="lg">安柯耳<span>AI检测</span></div></div>
+<div class="uz" id="uz"><input type="file" id="fi" accept="image/*" style="display:none"/>
+<div style="font-size:34px;margin-bottom:6px">📱</div>
+<div style="font-size:14px;color:rgba(255,255,255,.45)">点击上传头皮照片</div>
+<div style="font-size:11px;color:rgba(255,255,255,.2);margin-top:4px">自然光下拍摄发际线和头顶</div>
+<img id="pv" alt="" style="width:100%;border-radius:10px;display:none;margin-top:10px;max-height:320px;object-fit:cover"/></div></div>
+<div class="ov" id="ov"><div class="sp"></div><div class="t">AI 分析中...</div><div class="d" id="od">准备识别</div>
+<button class="bs" onclick="rst()" style="margin-top:24px">取消</button></div>
+<div class="rp" id="rp">
+<div class="sc" id="sc" style="--p:75%"><div class="n" id="sn">78</div><div class="l">综合评分</div></div>
+<div class="ht" id="ht">混合性</div><div class="sd" id="sm"></div>
+<div class="st">📊 四维分析</div><div id="dc"></div>
+<div class="st">💡 护理建议</div><div class="tc" id="tc"></div>
+<div class="ct"><h2>🎯 分享检测结果</h2><p>生成专属海报</p>
+<div class="as"><button class="bt bp" onclick="gp()">✨ 生成海报</button>
+<button class="bt bs" onclick="sr()">📤 分享</button>
+<button class="bt bs" onclick="rst()">🔄 重测</button></div></div></div>
+<div class="toast" id="tt"></div>
+<script>
+var S=["识别毛囊","分析油脂","评估屏障","计算密度","生成评分","完成"],C=null;
+var fi=document.getElementById("fi"),pv=document.getElementById("pv"),uz=document.getElementById("uz");
+uz.onclick=function(){fi.click()};
+fi.onchange=function(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){pv.src=e.target.result;pv.style.display="block";st()};r.readAsDataURL(f)};
+function st(){document.getElementById("ov").classList.add("active");var i=0,t=setInterval(function(){i++;document.getElementById("od").textContent=S[i];if(i>=6){clearInterval(t);dn()}},700)}
+function dn(){document.getElementById("ov").classList.remove("active");document.getElementById("rp").classList.add("active");
+var ts=["油性头皮","干性头皮","混合性头皮","敏感性头皮","健康头皮"],tp=ts[Math.floor(Math.random()*ts.length)],sc=Math.floor(Math.random()*30)+65;
+var ds=[{l:"油脂",s:tp=="油性头皮"?Math.floor(Math.random()*20)+40:Math.floor(Math.random()*35)+60},{l:"水分",s:Math.floor(Math.random()*30)+55},{l:"密度",s:Math.floor(Math.random()*25)+60},{l:"健康度",s:Math.floor(Math.random()*25)+65}];
+var tips=["用氨基酸表活温和清洁","每周1-2次深层清洁","水温38℃，指腹按摩","每2-3天洗一次"];if(tp=="敏感性头皮")tips[0]="暂停含香精酒精产品";
+C={sc,tp,ds,tips};document.getElementById("sn").textContent=sc;document.getElementById("sc").style.setProperty("--p",sc+"%");document.getElementById("ht").textContent=tp;document.getElementById("sm").textContent=sc>=80?"状态优秀":sc>=70?"基本健康":"需要开始护理";
+var dc=document.getElementById("dc");dc.innerHTML="";for(var i=0;i<ds.length;i++){var d=ds[i],c=d.s>=80?"#64c882":d.s>=65?"#64b4ff":"#e8d5b7";dc.innerHTML+='<div class="dm"><span class="lb">'+d.l+'</span><div class="br"><div class="fl" style="width:'+d.s+'%;background:'+c+'"></div></div><span class="vl" style="color:'+c+'">'+d.s+'</span></div>'}
+var tc=document.getElementById("tc");tc.innerHTML="";for(var i=0;i<tips.length;i++){tc.innerHTML+='<p>• '+tips[i]+'</p>'}window.scrollTo({top:0,behavior:"smooth"})}
+function msg(m){var t=document.getElementById("tt");t.textContent=m;t.style.display="block";clearTimeout(t._t);t._t=setTimeout(function(){t.style.display="none"},2500)}
+function rst(){C=null;document.getElementById("rp").classList.remove("active");document.getElementById("ov").classList.remove("active");document.getElementById("pv").style.display="none";document.getElementById("fi").value=""}
+async function gp(){if(!C){msg("先完成检测");return}msg("生成海报...");try{var w=window.open("/fenzhen/poster?s="+C.sc+"&t="+encodeURIComponent(C.tp)+"&kt="+Date.now(),"_blank","width=420,height=800");if(w)msg("海报已生成");else msg("请允许弹窗")}catch(e){msg("失败")}}
+function sr(){if(!C)return;var t="我的头皮健康分 "+C.sc+" 分！快来测测: airaquas.hair/detect";if(navigator.share)navigator.share({title:"安柯耳AI头皮检测",text:t}).catch(function(){});else navigator.clipboard.writeText(t).then(function(){msg("已复制")}).catch(function(){msg("截图分享")})}
+</script></body></html>`;
+
+app.get('/detect', (c) => c.html(DETECT_HTML));
+app.get('/detect/', (c) => c.html(DETECT_HTML));
 
 app.get('/postpartum', (c) => c.html(pageMap['postpartum']));
 app.get('/postpartum/', (c) => c.html(pageMap['postpartum']));
