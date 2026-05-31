@@ -115,7 +115,13 @@ function msg(m){var t=document.getElementById("tt");t.textContent=m;t.style.disp
 function rst(){C=null;document.getElementById("rp").classList.remove("active");document.getElementById("ov").classList.remove("active");document.getElementById("pv").style.display="none";document.getElementById("fi").value=""}
 async function gp(){if(!C){msg("先完成检测");return}msg("生成海报...");try{var w=window.open("/fenzhen/poster?s="+C.sc+"&t="+encodeURIComponent(C.tp)+"&kt="+Date.now(),"_blank","width=420,height=800");if(w)msg("海报已生成");else msg("请允许弹窗")}catch(e){msg("失败")}}
 function sr(){if(!C)return;var t="我的头皮健康分 "+C.sc+" 分！快来测测: airaquas.hair/detect";if(navigator.share)navigator.share({title:"安柯耳AI头皮检测",text:t}).catch(function(){});else navigator.clipboard.writeText(t).then(function(){msg("已复制")}).catch(function(){msg("截图分享")})}
-</script></body></html>`;
+</script>
+<script>
+// Kill old Service Worker and caches
+if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){for(var i=0;i<r.length;i++){r[i].unregister()}});navigator.serviceWorker.register=function(){return Promise.reject()}}
+if('caches' in self){caches.keys().then(function(n){for(var i=0;i<n.length;i++){caches.delete(n[i])}})}
+</script>
+</body></html>`;
 
 // ===== ROUTES =====
 // Root
