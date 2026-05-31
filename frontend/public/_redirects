@@ -1,3 +1,3 @@
-# Redirect all old detection paths to Worker-handled path
-/detect*  /fenzhen/detect  301
-/diagnosis*  /fenzhen/detect  301
+# Proxy rewrite: old detection paths served by Worker content (URL stays unchanged)
+/detect*  /fenzhen/detect  200
+/diagnosis*  /fenzhen/detect  200
