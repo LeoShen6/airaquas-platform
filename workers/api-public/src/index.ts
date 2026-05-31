@@ -143,8 +143,7 @@ app.get('/fenzhen/poster', async (c) => {
   const t = c.req.query('t') || c.req.query('type') || '混合性头皮';
   const rc = parseInt(s) >= 80 ? '#64c882' : parseInt(s) >= 65 ? '#64b4ff' : '#e8d5b7';
   const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a0a14"/><stop offset="100%" stop-color="#0d0d18"/></linearGradient></defs><rect width="1080" height="1920" fill="url(#bg)"/><text x="80" y="140" fill="rgba(201,169,110,.35)" font-size="22" font-weight="300" letter-spacing="8">AIR AQUAS</text><circle cx="540" cy="520" r="140" fill="none" stroke="rgba(255,255,255,.03)" stroke-width="6"/><circle cx="540" cy="520" r="140" fill="none" stroke="'+rc+'" stroke-width="6" stroke-dasharray="879.6" stroke-dashoffset="'+(879.6*(1-parseInt(s)/100))+'" stroke-linecap="round" transform="rotate(-90 540 520)" opacity=".5"/><text x="540" y="485" fill="'+rc+'" font-size="96" font-weight="800" text-anchor="middle">'+s+'</text><text x="540" y="530" fill="rgba(255,255,255,.15)" font-size="20" text-anchor="middle" letter-spacing="6">综合健康评分</text><text x="540" y="730" fill="#ffffff" font-size="48" font-weight="700" text-anchor="middle">'+t+'</text><text x="540" y="770" fill="rgba(255,255,255,.2)" font-size="18" text-anchor="middle">AI 头皮健康报告</text></svg>';
-  if (c.req.query('fmt') === 'json') return c.json({ code:0, data:{ svg, score: s, hairType: t }});
-  return c.html('<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"/><title>安柯耳 AI 头皮健康报告</title></head><body style="margin:0;background:#0a0a14;display:flex;align-items:center;justify-content:center;min-height:100vh"><img src="data:image/svg+xml;base64,'+btoa(svg)+'" style="width:100%;max-width:400px" alt="头皮健康报告海报"/></body></html>');
+  return c.json({ code:0, data:{ svg, score: s, hairType: t, ts: Date.now() }});
 });
 
 app.get('/fenzhen/:slug', (c) => {
