@@ -138,7 +138,7 @@ app.get('/sebderm/', (c) => c.html(sebDermHtml));
 app.get('/fenzhen/status', (c) => c.json({ ok: true, version: '3.3' }));
 
 //=== POSTER (works via catch-all route) ===
-app.get('/fenzhen/poster', async (c) => {
+app.get('/fenzhen/poster', (c) => {
   const s = c.req.query('s') || '78';
   const t = c.req.query('t') || 'mixed';
   return c.json({ code:0, data: { score: s, type: t, msg: 'ok' }});
