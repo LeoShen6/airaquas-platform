@@ -7,9 +7,4 @@ routes = [
   "airaquas.hair/guide*",
   "airaquas.hair/research*",
   "airaquas.hair/sebderm*",
-  "airaquas.hair/postpartum*",
-  "airaquas.hair/alopecia-areata*",
-  "airaquas.hair/seasonal*",
-  "airaquas.hair/dandruff*",
-  "airaquas.hair/folliculitis*",
 ]
