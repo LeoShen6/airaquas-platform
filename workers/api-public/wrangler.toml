@@ -8,4 +8,5 @@ routes = [
   "airaquas.hair/guide*",
   "airaquas.hair/research*",
   "airaquas.hair/sebderm*",
+  "airaquas.hair/detect*",
 ]

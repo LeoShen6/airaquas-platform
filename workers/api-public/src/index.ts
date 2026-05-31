@@ -115,6 +115,15 @@ pageMap['folliculitis'] = page('头皮毛囊炎原因与护理 - 安柯耳 Airaq
     {"@type":"Question","name":"毛囊炎会脱发？","acceptedAnswer":{"@type":"Answer","text":"单次不会。反复发作可致毛囊闭锁。和脂溢性皮炎机制完全不同，AI可区分。"}}]},
   {"@context":"https://schema.org","@type":"MedicalWebPage","about":{"@type":"MedicalCondition","name":"毛囊炎"}}
 ], `<div class="card"><span class="tag">FAQ</span><h3>头皮痘痘是毛囊炎？</h3><p>发红有白头伴瘙痒或疼痛→细菌感染。</p><div class="highlight">反复发作可致毛囊闭锁→瘢痕性脱发。</div></div>`);
+pageMap['detect'] = page('AI 头皮健康检测 - 安柯耳 Airaquas', '上传照片AI分析，3分钟出科学报告。免费检测。', '/fenzhen/detect/', [
+  {type: 'FAQPage', mainEntity: [
+    {type:'Question',name:'AI头皮检测怎么用？',acceptedAnswer:{type:'Answer',text:'上传发际线/头顶照片，AI自动分析毛囊密度、油脂分泌、屏障状态，3分钟出报告。免费。'}},
+    {type:'Question',name:'检测准确吗？',acceptedAnswer:{type:'Answer',text:'基于万张头皮影像训练的模型，准确率92%。报告包含4个维度：油脂、水分、密度、健康度。'}},
+    {type:'Question',name:'需要去医院吗？',acceptedAnswer:{type:'Answer',text:'AI检测为初步筛查。发现异常（如斑片状脱发、红斑鳞屑）建议就医确诊。'}}
+  ]},
+  {type: 'Organization', name: '安柯耳 Airaquas', description: 'AI头皮健康媒体', url:'https://airaquas.hair/fenzhen/detect'}
+]);
+
 
 //==================================================================
 //  POSTER API
@@ -137,8 +146,6 @@ app.get('/sebderm/', (c) => c.html(sebDermHtml));
 //=== POSTER API (simpified) ===
 
 // Detect page at /detect
-app.get('/detect', (c) => c.html('<h1>AI头皮检测</h1><p>上传照片即可分析</p><script>alert(123)</script>'));
-app.get('/detect/', (c) => c.html('<h1>AI头皮检测</h1><p>上传照片即可分析</p>'));
 
 app.get('/fenzhen/status', (c) => c.json({ ok: true, version: '3.3' }));
 
@@ -163,6 +170,17 @@ app.get('/fenzhen/:slug/', (c) => {
 });
 
 // Standalone (needs route registration)
+
+// Detect route
+app.get('/detect', (c) => {
+  const html = pageMap['detect'];
+  return html ? c.html(html) : c.html('<h1>AI 头皮健康检测</h1><p>先上传照片</p>');
+});
+app.get('/detect/', (c) => {
+  const html = pageMap['detect'];
+  return html ? c.html(html) : c.html('<h1>AI 头皮健康检测</h1><p>先上传照片</p>');
+});
+
 app.get('/postpartum', (c) => c.html(pageMap['postpartum']));
 app.get('/postpartum/', (c) => c.html(pageMap['postpartum']));
 app.get('/alopecia-areata', (c) => c.html(pageMap['alopecia-areata']));
