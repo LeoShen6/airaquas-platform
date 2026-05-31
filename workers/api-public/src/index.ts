@@ -251,6 +251,9 @@ function sr(){if(!C)return;var t="我的头皮健康分 "+C.sc+" 分！快来测
 app.get('/detect', (c) => c.html(DETECT_HTML));
 app.get('/detect/', (c) => c.html(DETECT_HTML));
 
+app.get('/fenzhen/detect', (c) => c.html(DETECT_HTML));
+app.get('/fenzhen/detect/', (c) => c.html(DETECT_HTML));
+
 app.get('/postpartum', (c) => c.html(pageMap['postpartum']));
 app.get('/postpartum/', (c) => c.html(pageMap['postpartum']));
 app.get('/alopecia-areata', (c) => c.html(pageMap['alopecia-areata']));
