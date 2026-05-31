@@ -148,23 +148,6 @@ app.get('/fenzhen/poster', (c) => {
   return c.json({ code:0, data: { score: s, type: t, msg: 'ok' }});
 });
 
-app.get('/fenzhen/:slug', (c) => {
-  const slug = c.req.param('slug') || '';
-
-  const html = pageMap[slug];
-  return html ? c.html(html) : c.html(fenzhenHtml);
-});
-app.get('/fenzhen/:slug/', (c) => {
-  const slug = c.req.param('slug') || '';
-
-  const html = pageMap[slug];
-  return html ? c.html(html) : c.html(fenzhenHtml);
-});
-
-// Standalone (needs route registration)
-
-// Detect route
-// Detect page (complete static HTML)
 const DETECT_HTML = `<!DOCTYPE html><html lang="zh-CN"><head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>AI 头皮健康检测 - 安柯耳 Airaquas</title>
@@ -254,6 +237,23 @@ app.get('/detect/', (c) => c.html(DETECT_HTML));
 app.get('/fenzhen/detect', (c) => c.html(DETECT_HTML));
 app.get('/fenzhen/detect/', (c) => c.html(DETECT_HTML));
 
+app.get('/fenzhen/:slug', (c) => {
+  const slug = c.req.param('slug') || '';
+
+  const html = pageMap[slug];
+  return html ? c.html(html) : c.html(fenzhenHtml);
+});
+app.get('/fenzhen/:slug/', (c) => {
+  const slug = c.req.param('slug') || '';
+
+  const html = pageMap[slug];
+  return html ? c.html(html) : c.html(fenzhenHtml);
+});
+
+// Standalone (needs route registration)
+
+// Detect route
+// Detect page (complete static HTML)
 app.get('/postpartum', (c) => c.html(pageMap['postpartum']));
 app.get('/postpartum/', (c) => c.html(pageMap['postpartum']));
 app.get('/alopecia-areata', (c) => c.html(pageMap['alopecia-areata']));
