@@ -2,3 +2,9 @@ name = "airaquas-api-public"
 main = "src/index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
+
+routes = [
+  { pattern = "airaquas.hair/fenzhen*", zone_id = "4a6d8c7a2b3e4f5a8c7d6e5f4a3b2c1d" },
+  { pattern = "airaquas.hair/guide*", zone_id = "4a6d8c7a2b3e4f5a8c7d6e5f4a3b2c1d" },
+  { pattern = "airaquas.hair/research*", zone_id = "4a6d8c7a2b3e4f5a8c7d6e5f4a3b2c1d" },
+]
