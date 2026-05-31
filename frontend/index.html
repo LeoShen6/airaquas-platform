@@ -1,13 +1,21 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta http-equiv="refresh" content="0;url=/fenzhen/">
+<title>安柯耳 Airaquas · AI头皮健康检测</title>
+<link rel="canonical" href="https://airaquas.hair/fenzhen/"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"安柯耳 Airaquas","url":"https://airaquas.hair"}</script>
+</head>
+<body>
+<script>
+// Kill old Service Worker
+if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){for(var i=0;i<r.length;i++){r[i].unregister()}})}
+if('caches' in self){caches.keys().then(function(n){for(var i=0;i<n.length;i++){caches.delete(n[i])}})}
+// Redirect
+if(window.location.pathname==='/'){window.location.replace('/fenzhen/')}
+</script>
+<h1 style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#c8a96e;font-size:16px;font-family:sans-serif">安柯耳 · AI 头皮健康检测</h1>
+</body>
 </html>
