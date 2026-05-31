@@ -33,7 +33,7 @@ Page({
     wx.navigateTo({ url: '/pages/product/product?id=' + id });
   },
   goScalpMatch() {
-    wx.navigateTo({ url: '/pages/diagnosis/diagnosis' });
+    wx.navigateTo({ url: '/pages/detect/detect' });
   },
   goAllProducts() {
     wx.navigateTo({ url: '/pages/products/products' });

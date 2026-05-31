@@ -1,0 +1,148 @@
+<view class="page">
+  <!-- 未检测状态 -->
+  <view wx:if="{{!image && !showResult}}" class="detect-init">
+    <view class="detect-header">
+      <view class="detect-icon">🧬</view>
+      <view class="detect-title">AI智能头皮检测</view>
+      <view class="detect-desc">上传头皮照片，AI多维度分析你的头皮健康状况</view>
+    </view>
+
+    <view class="steps">
+      <view class="step" wx:for="{{steps}}" wx:key="index">
+        <view class="step-num">{{index + 1}}</view>
+        <view class="step-body">
+          <text class="step-title">{{item.title}}</text>
+          <text class="step-desc">{{item.desc}}</text>
+        </view>
+      </view>
+    </view>
+
+    <button class="btn-primary detect-btn" bindtap="chooseImage">
+      <text>📸 拍摄/上传头皮照片</text>
+    </button>
+    <text class="detect-tip">请确保照片光线充足、头皮区域清晰可见</text>
+  </view>
+
+  <!-- 检测中 -->
+  <view wx:elif="{{detecting}}" class="detecting">
+    <view class="detecting-circle"></view>
+    <view class="detecting-text">AI正在分析你的头皮...</view>
+    <view class="detecting-sub">请稍等，即将生成报告</view>
+  </view>
+
+  <!-- 检测结果 -->
+  <view wx:elif="{{showResult && report}}" class="report">
+    <!-- AI生成标识 -->
+    <view class="ai-badge-wrap"><text class="ai-badge">🤖 AI生成 · 仅供参考</text></view>
+    <!-- 综合评分 -->
+    <view class="report-header">
+      <view class="report-score">{{report.overall.score}}</view>
+      <view class="report-score-label">综合评分</view>
+      <view class="report-level {{report.overall.level === '优秀' ? 'level-excellent' : report.overall.level === '良好' ? 'level-good' : 'level-normal'}}">{{report.overall.level}}</view>
+    </view>
+
+    <!-- 发质类型 & 摘要 -->
+    <view class="report-type">{{report.hairType}}</view>
+    <view class="report-summary">{{report.overall.summary}}</view>
+
+    <!-- 四维雷达条 -->
+    <view class="report-dimensions">
+      <view class="dimension" wx:for="{{report.dimensions}}" wx:key="*this">
+        <view class="dimension-header">
+          <text class="dimension-label">{{item.label}}</text>
+          <view class="dimension-right">
+            <text class="dimension-desc" wx:if="{{item.desc}}">{{item.desc}}</text>
+            <text class="dimension-score">{{item.score}}分</text>
+          </view>
+        </view>
+        <view class="dimension-bar">
+          <view class="dimension-fill" style="width: {{item.score}}%"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 分析发现 -->
+    <view wx:if="{{report.analysis && report.analysis.findings}}" class="card section">
+      <view class="card-title">🔍 分析发现</view>
+      <view class="findings">
+        <view class="finding" wx:for="{{report.analysis.findings}}" wx:key="*this">
+          <text class="finding-bullet">•</text>
+          <text class="finding-text">{{item}}</text>
+        </view>
+      </view>
+      <view wx:if="{{report.analysis.rootCauses && report.analysis.rootCauses.length}}" class="root-causes">
+        <view class="card-subtitle">可能原因</view>
+        <view class="cause" wx:for="{{report.analysis.rootCauses}}" wx:key="*this">
+          <text class="cause-bullet">▸</text>
+          <text class="cause-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 护理方案 -->
+    <view wx:if="{{report.careRoutine}}" class="card section">
+      <view class="card-title">📋 护理方案</view>
+      <!-- 每日 -->
+      <view wx:if="{{report.careRoutine.daily && report.careRoutine.daily.length}}" class="routine-block">
+        <view class="routine-label">每日护理</view>
+        <view class="routine-item" wx:for="{{report.careRoutine.daily}}" wx:key="*this">
+          <text class="routine-dot">•</text>
+          <text class="routine-text">{{item}}</text>
+        </view>
+      </view>
+      <!-- 每周 -->
+      <view wx:if="{{report.careRoutine.weekly && report.careRoutine.weekly.length}}" class="routine-block">
+        <view class="routine-label">每周护理</view>
+        <view class="routine-item" wx:for="{{report.careRoutine.weekly}}" wx:key="*this">
+          <text class="routine-dot">•</text>
+          <text class="routine-text">{{item}}</text>
+        </view>
+      </view>
+      <!-- 注意事项 -->
+      <view wx:if="{{report.careRoutine.caution && report.careRoutine.caution.length}}" class="routine-block">
+        <view class="routine-label caution-label">注意事项</view>
+        <view class="routine-item" wx:for="{{report.careRoutine.caution}}" wx:key="*this">
+          <text class="routine-dot caution-dot">!</text>
+          <text class="routine-text caution-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 推荐产品 -->
+    <view wx:if="{{report.productRecommendations && report.productRecommendations.length}}" class="card section">
+      <view class="card-title">🛒 推荐产品</view>
+      <view class="product-rec" wx:for="{{report.productRecommendations}}" wx:for-item="rec" wx:key="category">
+        <view class="rec-category">{{rec.category}}</view>
+        <view class="rec-target">{{rec.targetIssue}}</view>
+        <view wx:if="{{rec.keyIngredients && rec.keyIngredients.length}}" class="rec-ingredients">
+          <text class="rec-label">推荐成分：</text>
+          <text class="rec-tag" wx:for="{{rec.keyIngredients}}" wx:for-item="ing" wx:key="*this">{{ing}}</text>
+        </view>
+        <view wx:if="{{rec.brandExamples && rec.brandExamples.length}}" class="rec-brands">
+          <text class="rec-label">品牌参考：</text>
+          <text>{{rec.brandExamples.join('、')}}</text>
+        </view>
+        <view wx:if="{{rec.purchaseGuide}}" class="rec-guide">{{rec.purchaseGuide}}</view>
+        <view wx:if="{{rec.searchLinks}}" class="rec-links">
+          <text class="rec-link" data-url="{{rec.searchLinks.jd}}" bindtap="openLink">京东搜索</text>
+          <text class="rec-link" data-url="{{rec.searchLinks.taobao}}" bindtap="openLink">淘宝搜索</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 简版建议 -->
+    <view wx:if="{{report.tips && report.tips.length}}" class="card section">
+      <view class="card-title">💡 护理建议</view>
+      <view class="tip" wx:for="{{report.tips}}" wx:key="*this">
+        <text class="tip-dot">•</text>
+        <text class="tip-text">{{item}}</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="report-nav">
+      <button class="btn-primary" bindtap="goShop">查看推荐产品</button>
+      <button class="btn-secondary" bindtap="retake">重新检测</button>
+    </view>
+  </view>
+</view>
