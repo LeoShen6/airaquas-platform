@@ -119,30 +119,6 @@ pageMap['folliculitis'] = page('头皮毛囊炎原因与护理 - 安柯耳 Airaq
 //==================================================================
 //  POSTER API
 //==================================================================
-app.post('/poster-api', async (c) => {
-  try {
-    const body = await c.req.json();
-    const { reportData } = body;
-    if (!reportData) return c.json({ code: 1, message: '缺少报告数据' });
-    const score = reportData.overall?.score || 78;
-    const hairType = reportData.hairType || '混合性头皮';
-    const dims = reportData.dimensions || {};
-    const rc = score >= 80 ? '#64c882' : score >= 65 ? '#64b4ff' : '#e8d5b7';
-    let dimSVG = ''; let y = 310;
-    for (const k of ['sebum','moisture','density','health']) {
-      const d = dims[k]; if (!d) continue;
-      dimSVG += `<text x="60" y="${y}" fill="rgba(255,255,255,.25)" font-size="11">${d.label||k}</text><text x="180" y="${y}" fill="rgba(255,255,255,.4)" font-size="11" text-anchor="end">${d.score||70}</text><rect x="195" y="${y-13}" width="${Math.max((d.score||70)*2,10)}" height="4" rx="2" fill="${rc}" opacity=".6"/>`;
-      y += 28;
-    }
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a0a14"/><stop offset="100%" stop-color="#0d0d18"/></linearGradient><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${rc}" stop-opacity=".5"/><stop offset="100%" stop-color="${rc}" stop-opacity=".15"/></linearGradient></defs><rect width="1080" height="1920" fill="url(#bg)"/><text x="80" y="140" fill="rgba(201,169,110,.35)" font-size="22" font-weight="300" letter-spacing="8">AIR AQUAS</text><circle cx="540" cy="520" r="140" fill="none" stroke="rgba(255,255,255,.03)" stroke-width="6"/><circle cx="540" cy="520" r="140" fill="none" stroke="url(#rg)" stroke-width="6" stroke-dasharray="879.6" stroke-dashoffset="${879.6*(1-score/100)}" stroke-linecap="round" transform="rotate(-90 540 520)"/><text x="540" y="485" fill="${rc}" font-size="96" font-weight="800" text-anchor="middle">${score}</text><text x="540" y="530" fill="rgba(255,255,255,.15)" font-size="20" text-anchor="middle" letter-spacing="6">综合健康评分</text><text x="540" y="730" fill="#ffffff" font-size="48" font-weight="700" text-anchor="middle">${hairType}</text><text x="540" y="770" fill="rgba(255,255,255,.2)" font-size="18" text-anchor="middle">AI 头皮健康分析报告</text><line x1="340" y1="820" x2="740" y2="820" stroke="rgba(201,169,110,.08)" stroke-width="1"/><text x="540" y="860" fill="rgba(255,255,255,.12)" font-size="14" text-anchor="middle" letter-spacing="4">维 度 分 析</text>${dimSVG}<text x="540" y="1850" fill="rgba(255,255,255,.04)" font-size="14" text-anchor="middle" letter-spacing="4">Airaquas · 安柯耳 · AI头皮健康管理</text></svg>`;
-    const b64 = btoa(svg);
-    return c.json({ code:0, data:{ images:[{ data:`data:image/svg+xml;base64,${b64}`, width:1080, height:1920 }], provider:'cf-post-worker', landingUrl:'https://airaquas.hair/fenzhen/' }});
-  } catch(e) { return c.json({ code:500, message: e.message }); }
-});
-
-//==================================================================
-//  ROUTES
-//==================================================================
 app.get('/', (c) => c.json({ service: 'airaquas-public', version: '3.1.0', pages: Object.keys(pageMap) }));
 
 // Core (routes registered)
@@ -159,17 +135,36 @@ app.get('/sebderm/', (c) => c.html(sebDermHtml));
 //=== POSTER API (before catch-all so it matches first) ===
 //=== POSTER API (GET-based, avoids POST routing issues) ===
 //=== POSTER API (simpified) ===
-app.get('/fenzhen/pgen', async (c) => {
-  return c.json({ code: 0, data: { score: '85', ts: Date.now() }});
-});
 app.get('/fenzhen/status', (c) => c.json({ ok: true, version: '3.3' }));
 
 app.get('/fenzhen/:slug', (c) => {
-  const html = pageMap[c.req.param('slug') || ''];
+  const slug = c.req.param('slug') || '';
+  // Poster API
+  if (slug === 'poster') {
+    const s = c.req.query('s') || '78';
+    const t = c.req.query('t') || '混合性头皮';
+    const se = parseInt(c.req.query('se') || '75');
+    const mo = parseInt(c.req.query('mo') || '65');
+    const de = parseInt(c.req.query('de') || '70');
+    const he = parseInt(c.req.query('he') || '72');
+    const rc = parseInt(s) >= 80 ? '#64c882' : parseInt(s) >= 65 ? '#64b4ff' : '#e8d5b7';
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a0a14"/><stop offset="100%" stop-color="#0d0d18"/></linearGradient></defs><rect width="1080" height="1920" fill="url(#bg)"/><text x="80" y="140" fill="rgba(201,169,110,.35)" font-size="22" font-weight="300" letter-spacing="8">AIR AQUAS</text><circle cx="540" cy="520" r="140" fill="none" stroke="rgba(255,255,255,.03)" stroke-width="6"/><circle cx="540" cy="520" r="140" fill="none" stroke="'+rc+'" stroke-width="6" stroke-dasharray="879.6" stroke-dashoffset="'+(879.6*(1-parseInt(s)/100))+'" stroke-linecap="round" transform="rotate(-90 540 520)" opacity=".5"/><text x="540" y="485" fill="'+rc+'" font-size="96" font-weight="800" text-anchor="middle">'+s+'</text><text x="540" y="530" fill="rgba(255,255,255,.15)" font-size="20" text-anchor="middle" letter-spacing="6">综合健康评分</text><text x="540" y="730" fill="#ffffff" font-size="48" font-weight="700" text-anchor="middle">'+t+'</text><text x="540" y="770" fill="rgba(255,255,255,.2)" font-size="18" text-anchor="middle">AI 头皮健康报告</text></svg>';
+    if (c.req.query('fmt') === 'json') return c.json({ code:0, data:{ svg, score: s, hairType: t }});
+    return c.html('<html><body style="margin:0;background:#0a0a14"><img src="data:image/svg+xml;base64,'+btoa(svg)+'" style="width:100%;max-width:400px"></body></html>');
+  }
+  const html = pageMap[slug];
   return html ? c.html(html) : c.html(fenzhenHtml);
 });
 app.get('/fenzhen/:slug/', (c) => {
-  const html = pageMap[c.req.param('slug') || ''];
+  const slug = c.req.param('slug') || '';
+  if (slug === 'poster') {
+    const s = c.req.query('s') || '78';
+    const t = c.req.query('t') || '混合性头皮';
+    const rc = parseInt(s) >= 80 ? '#64c882' : parseInt(s) >= 65 ? '#64b4ff' : '#e8d5b7';
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920"><rect width="1080" height="1920" fill="#0a0a14"/><text x="540" y="485" fill="'+rc+'" font-size="96" font-weight="800" text-anchor="middle">'+s+'</text><text x="540" y="530" fill="rgba(255,255,255,.15)" font-size="20" text-anchor="middle" letter-spacing="6">综合健康评分</text><text x="540" y="730" fill="#ffffff" font-size="48" font-weight="700" text-anchor="middle">'+t+'</text></svg>';
+    return c.html('<html><body style="margin:0;background:#0a0a14"><img src="data:image/svg+xml;base64,'+btoa(svg)+'" style="width:100%;max-width:400px"></body></html>');
+  }
+  const html = pageMap[slug];
   return html ? c.html(html) : c.html(fenzhenHtml);
 });
 
