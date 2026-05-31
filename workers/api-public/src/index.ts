@@ -159,10 +159,8 @@ app.get('/sebderm/', (c) => c.html(sebDermHtml));
 //=== POSTER API (before catch-all so it matches first) ===
 //=== POSTER API (GET-based, avoids POST routing issues) ===
 //=== POSTER API (simpified) ===
-app.get('/fenzhen/poster', async (c) => {
-  const score = c.req.query('s') || '78';
-  const ht = c.req.query('t') || '混合性头皮';
-  return c.json({ code: 0, data: { score, hairType: ht, ts: Date.now() }});
+app.get('/fenzhen/pgen', async (c) => {
+  return c.json({ code: 0, data: { score: '85', ts: Date.now() }});
 });
 app.get('/fenzhen/status', (c) => c.json({ ok: true, version: '3.3' }));
 
