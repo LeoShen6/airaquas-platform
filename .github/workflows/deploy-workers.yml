@@ -2,7 +2,7 @@ name: Deploy Workers
 on:
   push:
     branches: [main]
-    paths: ['workers/**', 'shared/**', 'wrangler.toml']
+    paths: ['workers/**', 'shared/**', 'wrangler.toml', 'src/**']
 
 jobs:
   deploy:
@@ -23,3 +23,8 @@ jobs:
             npx wrangler deploy
             cd ../..
           done
+          # Deploy root Worker with catch-all routes
+          echo "=== Deploying root Worker (airaquas-platform) ==="
+          npm init -y --silent
+          npm install hono
+          npx wrangler deploy
