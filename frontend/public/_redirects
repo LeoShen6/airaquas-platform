@@ -1,3 +1,5 @@
-# Force 301 redirect to Worker-handled path (overrides browser cache)
+# Force 301 redirect to Worker-handled path
+
+# Force browser to leave the old SPA URL
 /detect*  /fenzhen/detect  301
 /diagnosis*  /fenzhen/detect  301
