@@ -1,5 +1,3 @@
-# 将检测相关路径交给 Worker 处理（200 = 代理，URL不变）
-/detect/*  /fenzhen/detect  200
-/detect    /fenzhen/detect  200
-/diagnosis/*  /fenzhen/detect  200
-/diagnosis    /fenzhen/detect  200
+# Redirect all old detection paths to Worker-handled path
+/detect*  /fenzhen/detect  301
+/diagnosis*  /fenzhen/detect  301

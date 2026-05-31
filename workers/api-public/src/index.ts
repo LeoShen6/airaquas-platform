@@ -116,6 +116,7 @@ pageMap['folliculitis'] = page('头皮毛囊炎原因与护理 - 安柯耳 Airaq
   {"@context":"https://schema.org","@type":"MedicalWebPage","about":{"@type":"MedicalCondition","name":"毛囊炎"}}
 ], `<div class="card"><span class="tag">FAQ</span><h3>头皮痘痘是毛囊炎？</h3><p>发红有白头伴瘙痒或疼痛→细菌感染。</p><div class="highlight">反复发作可致毛囊闭锁→瘢痕性脱发。</div></div>`);
 
+pageMap['detect'] = DETECT_HTML;
 
 //==================================================================
 //  POSTER API
