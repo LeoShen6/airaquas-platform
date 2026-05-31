@@ -7,4 +7,5 @@ routes = [
   "airaquas.hair/fenzhen*",
   "airaquas.hair/guide*",
   "airaquas.hair/research*",
+  "airaquas.hair/sebderm*",
 ]
