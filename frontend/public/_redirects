@@ -1,0 +1,7 @@
+# 将检测相关路径重定向到 api-public Worker 的内容页面
+/detect/*  /fenzhen/detect  200
+/detect    /fenzhen/detect  200
+
+# 诊断路径也重定向到检测页
+/diagnosis/*  /fenzhen/detect  200
+/diagnosis    /fenzhen/detect  200
