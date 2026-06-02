@@ -21,4 +21,26 @@ routes = [
   "airaquas.hair/seasonal*",
   "airaquas.hair/dandruff*",
   "airaquas.hair/folliculitis*",
+  "airaquas.hair/api*",
 ]
+
+# D1 数据库绑定
+[[d1_databases]]
+binding = "DB"
+database_name = "airaquas-hair"
+database_id = "aaccdbdb-1592-41dd-b906-891d0a9a9556"
+
+# R2 存储绑定（用户上传的头皮照片）
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "airaquas-hair"
+
+# KV 命名空间（图片去重缓存）
+[[kv_namespaces]]
+binding = "KV"
+id = "310cf3f8f1184ddc823c116242515435"
+
+# Workers AI（图像分析）
+
+[ai]
+binding = "AI"
