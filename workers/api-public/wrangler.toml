@@ -3,10 +3,4 @@ main = "src/index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
-routes = [
-  "airaquas.hair/fenzhen*",
-  "airaquas.hair/guide*",
-  "airaquas.hair/research*",
-  "airaquas.hair/sebderm*",
-  "airaquas.hair/detect*",
-]
+# Routes removed — root Worker (airaquas-platform) handles all paths
