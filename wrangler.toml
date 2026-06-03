@@ -4,8 +4,19 @@ compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
 # ═══ Routes ═══
+# Only handles these paths; Cloudflare Pages serves everything else
 routes = [
-  "airaquas.hair/*",
+  "airaquas.hair/fenzhen*",
+  "airaquas.hair/guide*",
+  "airaquas.hair/research*",
+  "airaquas.hair/sebderm*",
+  "airaquas.hair/postpartum*",
+  "airaquas.hair/alopecia-areata*",
+  "airaquas.hair/seasonal*",
+  "airaquas.hair/dandruff*",
+  "airaquas.hair/folliculitis*",
+  "airaquas.hair/detect*",
+  "airaquas.hair/api*",
 ]
 
 # ═══ D1 Database (SQLite) ═══
@@ -31,6 +42,3 @@ binding = "AI"
 # ═══ Environment variables ═══
 [vars]
 AI_PROVIDER = "workers-ai"
-
-# ═══ Secrets (set manually via `wrangler secret put <name>`) ═══
-# No secrets required for production (all bindings configured above)
