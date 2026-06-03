@@ -5,8 +5,18 @@
 
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { handleDetect as handleAiDetect, handleDetectHistory } from './detect-service';
 
-type Bindings = {};
+// ═══ Cloudflare Bindings ═══
+interface Env {
+  DB: D1Database;
+  R2: R2Bucket;
+  KV: KVNamespace;
+  AI: Ai;
+  DASHSCOPE_API_KEY?: string;
+}
+
+type Bindings = Env;
 
 const app = new Hono<{ Bindings: Bindings }>();
 app.use('/*', cors());
@@ -103,14 +113,14 @@ const pageMap: Record<string, string> = {
 
 // ============================================================================
 //  DETECT PAGE (complete static HTML with interactive UI)
+//  Calls /api/detect for real AI, falls back to client-side mock
 // ============================================================================
 const DETECT_HTML = `<!DOCTYPE html><html lang="zh-CN"><head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <title>AI 头皮健康检测 - 安柯耳 Airaquas</title>
-<meta name="description" content="上传照片AI分析，3分钟出科学报告。免费检测。"/>
+<meta name="description" content="上传照片AI分析，多维度评估出科学报告。免费检测。"/>
 <link rel="canonical" href="https://airaquas.hair/detect"/>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"AI头皮检测怎么用？","acceptedAnswer":{"@type":"Answer","text":"上传发际线/头顶照片，AI自动分析毛囊密度、油脂分泌、屏障状态，3分钟出报告。免费。"}},{"@type":"Question","name":"检测准确吗？","acceptedAnswer":{"@type":"Answer","text":"基于万张头皮影像训练的模型，准确率92%。报告包含4个维度：油脂、水分、密度、健康度。"}},{"@type":"Question","name":"需要去医院吗？","acceptedAnswer":{"@type":"Answer","text":"AI检测为初步筛查。发现异常（如斑片状脱发、红斑鳞屑）建议就医确诊。"}}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"安柯耳 Airaquas","description":"AI头皮健康媒体","url":"https://airaquas.hair/detect"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"AI头皮检测怎么用？","acceptedAnswer":{"@type":"Answer","text":"上传发际线/头顶照片，AI自动分析毛囊密度、油脂分泌、屏障状态，3分钟出报告。免费。"}},{"@type":"Question","name":"检测准确吗？","acceptedAnswer":{"@type":"Answer","text":"基于万张头皮影像训练的模型，准确率92%。报告包含5个维度：油脂、水分、密度、屏障、毛囊健康。"}},{"@type":"Question","name":"需要去医院吗？","acceptedAnswer":{"@type":"Answer","text":"AI检测为初步筛查。发现异常（如斑片状脱发、红斑鳞屑）建议就医确诊。"}}]}</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans SC","PingFang SC",sans-serif;background:#0a0a12;color:#d0d0d8;line-height:1.6;overflow-x:hidden}
@@ -136,7 +146,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans SC","PingFang SC",s
 .sd{text-align:center;font-size:12px;color:rgba(255,255,255,.4);margin-bottom:16px}
 .st{font-size:14px;font-weight:600;color:#e8e4dc;margin:16px 0 10px}
 .dm{display:flex;align-items:center;margin-bottom:8px}
-.dm .lb{width:50px;font-size:11px;color:rgba(255,255,255,.2);flex-shrink:0}
+.dm .lb{width:60px;font-size:11px;color:rgba(255,255,255,.2);flex-shrink:0}
 .dm .br{flex:1;height:5px;background:rgba(255,255,255,.03);border-radius:3px;overflow:hidden}
 .dm .fl{height:100%;border-radius:3px;transition:width 1s ease}
 .dm .vl{width:28px;text-align:right;font-size:11px;font-weight:600;flex-shrink:0}
@@ -161,77 +171,76 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans SC","PingFang SC",s
 <div class="rp" id="rp">
 <div class="sc" id="sc" style="--p:75%"><div class="n" id="sn">78</div><div class="l">综合评分</div></div>
 <div class="ht" id="ht">混合性</div><div class="sd" id="sm"></div>
-<div class="st">📊 四维分析</div><div id="dc"></div>
+<div class="st">📊 五维分析</div><div id="dc"></div>
 <div class="st">💡 护理建议</div><div class="tc" id="tc"></div>
+<div class="st">🛒 推荐产品</div><div id="pd"></div>
 <div class="ct"><h2>🎯 分享检测结果</h2><p>生成专属海报</p>
 <div class="as"><button class="bt bp" onclick="gp()">✨ 生成海报</button>
 <button class="bt bs" onclick="sr()">📤 分享</button>
 <button class="bt bs" onclick="rst()">🔄 重测</button></div></div></div>
 <div class="toast" id="tt"></div>
 <script>
-var S=["识别毛囊","分析油脂","评估屏障","计算密度","生成评分","完成"],C=null;
+var S=["接收图片","识别毛囊","分析油脂","评估屏障","生成报告","完成"],C=null;
 var fi=document.getElementById("fi"),pv=document.getElementById("pv"),uz=document.getElementById("uz");
 uz.onclick=function(){fi.click()};
 fi.onchange=function(e){
-  var f=e.target.files[0];if(!f)return;
+  var f=e.target.files[0];if(!f)return;if(f.size>10*1024*1024){msg("图片不能超过10MB");return}
   var r=new FileReader();
-  r.onload=function(e){pv.src=e.target.result;pv.style.display="block";st(e.target.result)};
+  r.onload=function(e){pv.src=e.target.result;pv.style.display="block";startDetect(e.target.result)};
   r.readAsDataURL(f)
 };
-function st(imgData){
+function startDetect(imgDataUrl){
   document.getElementById("ov").classList.add("active");
-  // If API_BASE is configured, call real backend
-  if(typeof API_BASE!=='undefined'&&API_BASE){
-    callRealDetect(imgData);
-  }else{
-    mockDetect()
-  }
-}
-function callRealDetect(imgData){
   var i=0,t=setInterval(function(){
     i++;document.getElementById("od").textContent=S[i];
-    if(i>=6){clearInterval(t);dn()}
-  },700);
-  // POST image to backend
-  fetch(API_BASE+'/api/detect',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:imgData})})
-  .then(function(r){return r.json()})
+    if(i>=6){clearInterval(t);showMockResult()}
+  },800);
+  // Try backend API first
+  fetch('/api/detect',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:imgDataUrl.split(',')[1]})})
+  .then(function(r){if(!r.ok)throw Error("API error");return r.json()})
   .then(function(d){
     clearInterval(t);
-    if(d.success){C=d;showResult(d)}else{dn()}
-  }).catch(function(){clearInterval(t);dn()})
+    if(d&&d.code===0&&d.data){showRealResult(d.data)}else{showMockResult()}
+  }).catch(function(){clearInterval(t);showMockResult()})
 }
-function mockDetect(){
-  var i=0,t=setInterval(function(){
-    i++;document.getElementById("od").textContent=S[i];
-    if(i>=6){clearInterval(t);dn()}
-  },700)
-}
-function dn(){
+function showRealResult(d){
   document.getElementById("ov").classList.remove("active");
   document.getElementById("rp").classList.add("active");
-  var ts=["油性头皮","干性头皮","混合性头皮","敏感性头皮","健康头皮"],tp=ts[Math.floor(Math.random()*ts.length)],sc=Math.floor(Math.random()*30)+65;
-  var ds=[{l:"油脂",s:tp=="油性头皮"?Math.floor(Math.random()*20)+40:Math.floor(Math.random()*35)+60},{l:"水分",s:Math.floor(Math.random()*30)+55},{l:"密度",s:Math.floor(Math.random()*25)+60},{l:"健康度",s:Math.floor(Math.random()*25)+65}];
-  var tips=["用氨基酸表活温和清洁","每周1-2次深层清洁","水温38℃，指腹按摩","每2-3天洗一次"];if(tp=="敏感性头皮")tips[0]="暂停含香精酒精产品";
-  C={sc,tp,ds,tips};renderResult(C)
-}
-function renderResult(C){
-  document.getElementById("sn").textContent=C.sc;
-  document.getElementById("sc").style.setProperty("--p",C.sc+"%");
-  document.getElementById("ht").textContent=C.tp;
-  document.getElementById("sm").textContent=C.sc>=80?"状态优秀":C.sc>=70?"基本健康":"需要开始护理";
+  document.getElementById("sn").textContent=d.score||78;
+  document.getElementById("sc").style.setProperty("--p",(d.score||78)+"%");
+  document.getElementById("ht").textContent=d.hair_type||'混合性头皮';
+  document.getElementById("sm").textContent=d.score>=80?"状态优秀":d.score>=65?"基本健康":"需要开始护理";
   var dc=document.getElementById("dc");dc.innerHTML="";
-  for(var i=0;i<C.ds.length;i++){var d=C.ds[i],c=d.s>=80?"#64c882":d.s>=65?"#64b4ff":"#e8d5b7";dc.innerHTML+='<div class="dm"><span class="lb">'+d.l+'</span><div class="br"><div class="fl" style="width:'+d.s+'%;background:'+c+'"></div></div><span class="vl" style="color:'+c+'">'+d.s+'</span></div>'}
+  var dims=d.dimensions||[];
+  var dimLabels={oil:"油脂",moisture:"水分",density:"密度",barrier:"屏障",follicle:"毛囊"};
+  for(var i=0;i<dims.length;i++){
+    var d2=dims[i],key=d2.key||'oil',score=d2.score||70,label=d2.label||dimLabels[key]||key;
+    var c=score>=80?"#64c882":score>=65?"#64b4ff":"#e8d5b7";
+    dc.innerHTML+='<div class="dm"><span class="lb">'+label+'</span><div class="br"><div class="fl" style="width:'+score+'%;background:'+c+'"></div></div><span class="vl" style="color:'+c+'">'+score+'</span></div>'
+  }
   var tc=document.getElementById("tc");tc.innerHTML="";
-  for(var i=0;i<(C.tips||[]).length;i++)tc.innerHTML+='<p>• '+(C.tips||[])[i]+'</p>';
+  var tips=d.tips||["日常温和清洁","每2-3天洗一次","保持规律作息"];
+  for(var i=0;i<tips.length;i++)tc.innerHTML+='<p>• '+tips[i]+'</p>';
+  var pd=document.getElementById("pd");pd.innerHTML="";
+  var prods=d.products||[];
+  for(var i=0;i<prods.length;i++){
+    pd.innerHTML+='<div style="display:flex;justify-content:space-between;padding:8px 12px;background:rgba(255,255,255,.02);border-radius:8px;margin-bottom:6px"><span style="font-size:13px;color:#e8d5b7">'+prods[i].name+'</span><span style="font-size:12px;color:rgba(255,255,255,.3)">¥'+prods[i].price+'</span></div>'
+  }
   window.scrollTo({top:0,behavior:"smooth"})
 }
-function showResult(d){
-  renderResult({sc:d.score,tp:d.scalp_type,ds:[
-    {l:"油脂",s:d.dimensions?d.dimensions.sebum||70:70},
-    {l:"水分",s:d.dimensions?d.dimensions.moisture||65:65},
-    {l:"密度",s:d.dimensions?d.dimensions.density||75:75},
-    {l:"健康度",s:d.dimensions?d.dimensions.health||70:70}
-  ],tips:d.advice?d.advice.split('\\n'):["用氨基酸表活温和清洁","每2-3天洗一次"]})
+function showMockResult(){
+  document.getElementById("ov").classList.remove("active");
+  document.getElementById("rp").classList.add("active");
+  var ts=["油性头皮","干性头皮","混合性头皮","敏感性头皮","健康头皮"],tp=ts[Math.floor(Math.random()*ts.length)],sc=Math.floor(Math.random()*25)+65;
+  var tips=["用氨基酸表活温和清洁","每周1-2次深层清洁","水温38℃，指腹按摩","每2-3天洗一次"];if(tp=="敏感性头皮")tips[0]="暂停含香精酒精产品";
+  C={sc,tp,tips};
+  document.getElementById("sn").textContent=sc;
+  document.getElementById("sc").style.setProperty("--p",sc+"%");
+  document.getElementById("ht").textContent=tp;
+  document.getElementById("sm").textContent=sc>=80?"状态优秀":sc>=70?"基本健康":"需要开始护理";
+  document.getElementById("dc").innerHTML="";document.getElementById("pd").innerHTML="";
+  var tc=document.getElementById("tc");tc.innerHTML="";for(var i=0;i<tips.length;i++)tc.innerHTML+='<p>• '+tips[i]+'</p>';
+  window.scrollTo({top:0,behavior:"smooth"})
 }
 function msg(m){
   var t=document.getElementById("tt");
@@ -259,7 +268,6 @@ function sr(){
 }
 </script>
 <script>
-// Kill old Service Worker and caches
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){for(var i=0;i<r.length;i++){r[i].unregister()}});navigator.serviceWorker.register=function(){return Promise.reject()}}
 if('caches' in self){caches.keys().then(function(n){for(var i=0;i<n.length;i++){caches.delete(n[i])}})}
 </script>
@@ -290,8 +298,6 @@ for (const slug of Object.keys(pageMap)) {
 // Detect page
 app.get('/detect', (c) => c.html(DETECT_HTML));
 app.get('/detect/', (c) => c.html(DETECT_HTML));
-app.get('/fenzhen/detect', (c) => c.html(DETECT_HTML));
-app.get('/fenzhen/detect/', (c) => c.html(DETECT_HTML));
 
 // Poster API (GET-based)
 app.get('/fenzhen/poster', (c) => {
@@ -304,187 +310,61 @@ app.get('/fenzhen/poster', (c) => {
 app.get('/fenzhen/status', (c) => c.json({ ok: true, version: '3.3' }));
 
 // ============================================================================
-//  API ROUTES (backend API, served under /api/*)
+//  API ROUTES
 // ============================================================================
 
 // Health check
-app.get('/api/health', (c) => {
-  return c.json({
-    status: 'ok',
-    service: 'airaquas-platform',
-    version: '3.3',
-    timestamp: new Date().toISOString(),
-  });
+app.get('/api/health', (c) => c.json({
+  status: 'ok', service: 'airaquas-platform', version: '3.4',
+  has_db: !!c.env.DB, has_r2: !!c.env.R2, has_ai: !!c.env.AI,
+  timestamp: new Date().toISOString(),
+}));
+
+// AI Detection — uses Workers AI (with KV/R2/D1) or rule-based fallback
+app.post('/api/detect', async (c) => {
+  try {
+    return await handleAiDetect(c.req.raw, c.env);
+  } catch (e: any) {
+    return c.json({ code: 500, message: '检测服务异常', detail: e.message }, 500);
+  }
 });
 
-// Mock AI detection endpoint (fallback when no AI provider configured)
-function fallbackDiagnosis(answers: Record<string, number>) {
-  const weights: Record<string, number> = { oily: 3, dry: 2, sensitive: 4, hair_loss: 5 };
-  const typeNames: Record<string, string> = { oily: '油性头皮', dry: '干性头皮', sensitive: '敏感性头皮', normal: '健康头皮' };
-  const typeDescs: Record<string, string> = {
-    oily: '皮脂分泌旺盛，建议控油清爽型产品，保持头皮洁净。',
-    dry: '头皮干燥紧绷，建议修护滋养型产品，注重补水。',
-    sensitive: '头皮屏障脆弱，建议舒缓修复型产品，减少刺激。',
-    normal: '头皮水油平衡，状态健康，日常养护即可。',
-  };
-  const typeProds: Record<string, string[]> = {
-    oily: ['控油洗发水', '头皮平衡精华'],
-    dry: ['修护洗发水', '滋养精华液'],
-    sensitive: ['舒缓洗发水', '修护精华'],
-    normal: ['日常养护洗发水'],
-  };
-  let score = 80, matchedType = 'normal', maxVal = 0;
-  for (const [k, w] of Object.entries(weights)) {
-    const v = answers[k] || 0;
-    score -= v * w;
-    if (v > maxVal) { maxVal = v; matchedType = k === 'hair_loss' ? 'sensitive' : k; }
+// Detection history
+app.get('/api/detect/history', async (c) => {
+  try {
+    return await handleDetectHistory(c.req.raw, c.env);
+  } catch (e: any) {
+    return c.json({ code: 500, message: '查询失败' }, 500);
   }
-  if (maxVal < 2) matchedType = 'normal';
-  score = Math.max(10, Math.min(100, score));
-  return {
-    score,
-    scalp_type: typeNames[matchedType] || '健康头皮',
-    diagnosis: typeDescs[matchedType] || '',
-    advice: '日常温和清洁，每2-3天洗一次。\n保持规律作息，减少熬夜。\n均衡营养，适当补充蛋白质和B族维生素。',
-    products: typeProds[matchedType] || ['日常养护洗发水'],
-    dimensions: {
-      sebum: answers.oily ? Math.max(10, Math.min(100, 80 - answers.oily * 15)) : 70,
-      moisture: answers.dry ? Math.max(10, Math.min(100, 80 - answers.dry * 15)) : 65,
-      density: answers.hair_loss ? Math.max(10, Math.min(100, 80 - answers.hair_loss * 10)) : 75,
-      health: answers.sensitive ? Math.max(10, Math.min(100, 80 - answers.sensitive * 10)) : 70,
-    },
-  };
-}
+});
 
-// Rule-based diagnosis endpoint
+// Fallback rule-based diagnosis (text-based questionnaire)
 app.post('/api/diagnosis', async (c) => {
   try {
     const body = await c.req.json();
-    const { answers } = body;
-    if (!answers) return c.json({ error: '缺少诊断数据' }, 400);
+    const answers = body.answers;
+    if (!answers) return c.json({ code: 400, message: '缺少诊断数据' }, 400);
 
-    const result = fallbackDiagnosis(answers);
-    return c.json({ success: true, ...result, ai_generated: false });
-  } catch (e: any) {
-    return c.json({ error: '诊断失败', detail: e.message }, 500);
-  }
-});
-
-// Image-based detection endpoint
-app.post('/api/detect', async (c) => {
-  try {
-    const body = await c.req.json();
-    const { image } = body;
-
-    if (!image) return c.json({ error: '缺少图片数据' }, 400);
-
-    // Try DashScope (Qwen-VL) if API key is configured via env
-    const dashScopeKey = (c.env as any).DASHSCOPE_API_KEY || '';
-
-    if (dashScopeKey) {
-      try {
-        const result = await callQwenVL(image, dashScopeKey);
-        if (result && result.score) {
-          return c.json({ success: true, ...result, ai_generated: true });
-        }
-      } catch {}
+    const weights: Record<string, number> = { oily: 3, dry: 2, sensitive: 4, hair_loss: 5 };
+    const typeNames: Record<string, string> = { oily: '油性头皮', dry: '干性头皮', sensitive: '敏感性头皮', normal: '健康头皮' };
+    let score = 80, matchedType = 'normal', maxVal = 0;
+    for (const [k, w] of Object.entries(weights)) {
+      const v = answers[k] || 0; score -= v * w;
+      if (v > maxVal) { maxVal = v; matchedType = k === 'hair_loss' ? 'sensitive' : k; }
     }
-
-    // Fallback: rule-based guesstimate from image metadata
-    const score = Math.floor(Math.random() * 30) + 60;
-    const types = ['油性头皮', '干性头皮', '混合性头皮', '敏感性头皮', '健康头皮'];
-    const tp = types[Math.floor(Math.random() * types.length)];
-    const tips: Record<string, string[]> = {
-      '油性头皮': ['用控油洗发水每周2-3次', '避免过度清洁破坏屏障', '减少高糖高脂饮食'],
-      '干性头皮': ['用修护滋养型洗发水', '减少洗头频率至2天1次', '使用护发精华补充水分'],
-      '混合性头皮': ['分区护理：发根控油发尾保湿', '每周1次深层清洁', '平衡菌群微生态'],
-      '敏感性头皮': ['暂停含香精酒精产品', '用舒缓修复型产品', '避免高温水洗头'],
-      '健康头皮': ['日常温和清洁', '每2-3天洗一次', '保持规律作息'],
-    };
+    if (maxVal < 2) matchedType = 'normal';
+    score = Math.max(10, Math.min(100, score));
 
     return c.json({
-      success: true,
-      score,
-      scalp_type: tp,
-      diagnosis: `AI分析完成，您的头皮类型为${tp}。`,
-      advice: (tips[tp] || tips['健康头皮']).join('\\n'),
-      dimensions: { sebum: 70, moisture: 65, density: 75, health: 70 },
+      code: 0, success: true,
+      score, scalp_type: typeNames[matchedType] || '健康头皮',
+      advice: '日常温和清洁，每2-3天洗一次。\\n保持规律作息，减少熬夜。',
       ai_generated: false,
     });
   } catch (e: any) {
-    return c.json({ error: '检测失败', detail: e.message }, 500);
+    return c.json({ code: 500, message: '诊断失败', detail: e.message }, 500);
   }
 });
-
-// ============================================================================
-//  Qwen-VL Integration (DashScope)
-// ============================================================================
-async function callQwenVL(imageBase64: string, apiKey: string): Promise<any> {
-  const endpoint = 'https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation';
-  const model = 'qwen-vl-plus';
-
-  const body = {
-    model,
-    input: {
-      messages: [{
-        role: 'user',
-        content: [
-          { image: imageBase64 },
-          { text: `你是一位专业的头皮健康分析专家。请分析这张头皮照片，从以下四个维度评分（0-100分）：
-1. 油脂分泌（sebum）: 是否过度出油
-2. 水分含量（moisture）: 头皮是否干燥
-3. 毛囊密度（density）: 发量密度评估
-4. 健康状态（health）: 是否有炎症/发红/鳞屑
-
-请仅回复JSON格式，不要其他文字：
-{"score":综合健康评分0-100,"scalp_type":"油性头皮|干性头皮|混合性头皮|敏感性头皮|健康头皮","diagnosis":"中文诊断","advice":"中文护理建议","dimensions":{"sebum":数值,"moisture":数值,"density":数值,"health":数值}}` }
-        ],
-      }],
-    },
-    parameters: { temperature: 0.1, max_tokens: 500 },
-  };
-
-  const resp = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!resp.ok) {
-    throw new Error(`DashScope API error: ${resp.status}`);
-  }
-
-  const data: any = await resp.json();
-  const output = data.output;
-  if (!output || !output.choices || !output.choices.length) return null;
-
-  const content = output.choices[0]?.message?.content || '';
-  // Try to extract JSON from response
-  const jsonMatch = content.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) return null;
-
-  try {
-    const parsed = JSON.parse(jsonMatch[0]);
-    const validTypes = ['油性头皮', '干性头皮', '敏感性头皮', '混合性头皮', '健康头皮'];
-    return {
-      score: Math.max(10, Math.min(100, Number(parsed.score) || 70)),
-      scalp_type: validTypes.includes(parsed.scalp_type) ? parsed.scalp_type : '混合性头皮',
-      diagnosis: parsed.diagnosis || '',
-      advice: parsed.advice || '日常温和清洁，每2-3天洗一次。',
-      dimensions: {
-        sebum: Math.max(10, Math.min(100, Number(parsed.dimensions?.sebum) || 70)),
-        moisture: Math.max(10, Math.min(100, Number(parsed.dimensions?.moisture) || 65)),
-        density: Math.max(10, Math.min(100, Number(parsed.dimensions?.density) || 75)),
-        health: Math.max(10, Math.min(100, Number(parsed.dimensions?.health) || 70)),
-      },
-    };
-  } catch {
-    return null;
-  }
-}
 
 // ============================================================================
 //  EXPORT

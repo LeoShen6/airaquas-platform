@@ -214,3 +214,29 @@ INSERT OR IGNORE INTO product_tags (product_id, tag) VALUES
 ('prod-probiotic-conditioner', '益生菌'), ('prod-probiotic-conditioner', '护发'), ('prod-probiotic-conditioner', '修护'),
 ('prod-scalp-spray', '头皮护理'), ('prod-scalp-spray', '清爽'), ('prod-scalp-spray', '舒缓'),
 ('prod-aa-cleanser', '氨基酸'), ('prod-aa-cleanser', '温和清洁'), ('prod-aa-cleanser', '洗面奶');
+
+-- ============== DETECTIONS (AI头皮检测) ==============
+CREATE TABLE IF NOT EXISTS detections (
+  id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
+  session_id TEXT,                    -- 匿名会话标识（未登录用户）
+  user_id TEXT,                       -- 登录用户 ID
+  image_key TEXT,                     -- R2 原图键
+  thumb_key TEXT,                     -- R2 缩略图键
+  score INTEGER NOT NULL,             -- 综合评分 0-100
+  hair_type TEXT NOT NULL,            -- 油性/干性/混合/敏感性/健康
+  dimensions TEXT NOT NULL,           -- JSON: [{"label":"油脂分泌","score":75},...]
+  findings TEXT,                      -- JSON: 发现列表
+  tips TEXT,                          -- JSON: 建议列表
+  products TEXT,                      -- JSON: 推荐产品 [{name,url}]
+  confidence REAL DEFAULT 0.7,        -- AI 置信度 0-1
+  model_version TEXT DEFAULT 'v1.0',  -- 模型版本
+  ip_address TEXT,                    -- 来源 IP（隐私限制保留 24h）
+  expires_at DATETIME,                -- 自动过期（用户图片24h删除）
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_detections_session ON detections(session_id);
+CREATE INDEX IF NOT EXISTS idx_detections_user ON detections(user_id);
+CREATE INDEX IF NOT EXISTS idx_detections_created ON detections(created_at);
+
+-- 24h 后自动清理过期图片记录（由定时 Worker 触发）

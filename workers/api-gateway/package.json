@@ -1,0 +1,1 @@
+{"name":"airaquas-api-gateway","version":"0.1.0","private":true,"scripts":{"deploy":"wrangler deploy"},"dependencies":{"hono":"^4.0.0"},"devDependencies":{"wrangler":"^4.0.0"}}

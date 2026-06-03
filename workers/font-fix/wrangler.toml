@@ -1,0 +1,7 @@
+name = "airaquas-font-fix"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# 部署后配置路由：airaquas.hair/font-fix/*
+# 后续可改为路由绑定在源站前面

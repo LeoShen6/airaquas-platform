@@ -3,13 +3,34 @@ main = "src/index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
+# ═══ Routes ═══
 routes = [
   "airaquas.hair/*",
 ]
 
-# ═══ Environment variables (can be overridden per env) ═══
+# ═══ D1 Database (SQLite) ═══
+[[d1_databases]]
+binding = "DB"
+database_name = "airaquas-hair"
+database_id = "aaccdbdb-1592-41dd-b906-891d0a9a9556"
+
+# ═══ R2 Storage (user-uploaded scalp photos) ═══
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "airaquas-hair"
+
+# ═══ KV Namespace (image dedup cache) ═══
+[[kv_namespaces]]
+binding = "KV"
+id = "310cf3f8f1184ddc823c116242515435"
+
+# ═══ Workers AI (vision analysis) ═══
+[ai]
+binding = "AI"
+
+# ═══ Environment variables ═══
 [vars]
 DASHSCOPE_API_KEY = ""
 
-# ═══ Secrets (set via `wrangler secret put <name>`) ═══
-# DASHSCOPE_API_KEY = "sk-xxx"  # Set manually for production
+# ═══ Secrets (set manually via `wrangler secret put <name>`) ═══
+# No secrets required for production (all bindings configured above)
