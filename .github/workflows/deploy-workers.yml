@@ -1,8 +1,8 @@
-name: Deploy Workers
+name: Deploy
 on:
   push:
     branches: [main]
-    paths: ['workers/**', 'shared/**', 'wrangler.toml', 'src/**', '.github/**']
+    paths: ['src/**', 'wrangler.toml', 'package.json', '.github/**']
 
 jobs:
   deploy:
@@ -12,18 +12,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Deploy all workers
+      - name: Deploy root Worker (airaquas-platform)
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
-          for worker in api-gateway api-auth api-crm api-order api-inventory api-diagnosis api-marketing api-profit api-report api-public api-weapp api-assets api-community; do
-            echo "=== Deploying $worker ==="
-            cd workers/$worker
-            npm install
-            npx wrangler deploy
-            cd ../..
-          done
-          echo "=== Deploying root Worker (airaquas-platform) ==="
-          npm init -y --silent
           npm install hono
           npx wrangler deploy
