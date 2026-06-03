@@ -317,6 +317,8 @@ app.get('/fenzhen/status', (c) => c.json({ ok: true, version: '3.3' }));
 app.get('/api/health', (c) => c.json({
   status: 'ok', service: 'airaquas-platform', version: '3.4',
   has_db: !!c.env.DB, has_r2: !!c.env.R2, has_ai: !!c.env.AI,
+  ai_provider: c.env.AI_PROVIDER || 'workers-ai',
+  has_dashscope_key: !!(c.env as any).DASHSCOPE_API_KEY,
   timestamp: new Date().toISOString(),
 }));
 

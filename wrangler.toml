@@ -30,7 +30,7 @@ binding = "AI"
 
 # ═══ Environment variables ═══
 [vars]
-DASHSCOPE_API_KEY = ""
+AI_PROVIDER = "workers-ai"
 
 # ═══ Secrets (set manually via `wrangler secret put <name>`) ═══
 # No secrets required for production (all bindings configured above)
