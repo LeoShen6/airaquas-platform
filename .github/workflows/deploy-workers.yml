@@ -2,19 +2,43 @@ name: Deploy
 on:
   push:
     branches: [main]
-    paths: ['src/**', 'wrangler.toml', 'package.json', '.github/**']
+    paths:
+      - 'src/**'
+      - 'wrangler.toml'
+      - 'package.json'
+      - '.github/**'
+      - 'frontend/public/data.json'
+      - 'frontend/**'
 
 jobs:
-  deploy:
+  deploy-worker:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Deploy root Worker (airaquas-platform)
+      - name: Deploy Worker (airaquas-platform)
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
           npm install hono
           npx wrangler deploy
+
+  deploy-pages:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build & deploy Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: |
+          npm install
+          npm run build
+          npx wrangler pages deploy dist --project-name airaquas-hair
