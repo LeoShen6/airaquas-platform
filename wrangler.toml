@@ -4,27 +4,8 @@ compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
 # ═══ Routes ═══
-# Worker handles ALL traffic — root serves the full SPA
-# All functions accessed via path routes (no subdomain dependencies)
-routes = [
-  { pattern = "airaquas.hair", custom_domain = true },
-  # custom_domain catches ALL paths automatically (no /* needed)
-  # Additional path routes are included for backward compat
-  "airaquas.hair/salon*",
-  "airaquas.hair/shop*",
-  "airaquas.hair/tony-cities*",
-  "airaquas.hair/fenzhen*",
-  "airaquas.hair/guide*",
-  "airaquas.hair/detect*",
-  "airaquas.hair/research*",
-  "airaquas.hair/sebderm*",
-  "airaquas.hair/postpartum*",
-  "airaquas.hair/alopecia-areata*",
-  "airaquas.hair/seasonal*",
-  "airaquas.hair/dandruff*",
-  "airaquas.hair/folliculitis*",
-  "airaquas.hair/api*",
-]
+# Worker handles all paths via Cloudflare dashboard custom domain.
+# Route config here would cause version conflicts with dashboard-managed routes.
 
 # ═══ D1 Database (SQLite) ═══
 [[d1_databases]]
