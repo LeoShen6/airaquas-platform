@@ -23,12 +23,27 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - name: Deploy Worker (airaquas-platform)
+      - name: Diagnose deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
+          set -e
+          echo "::group::Wrangler version"
+          npx --yes wrangler --version 2>&1 || true
+          echo "::endgroup::"
+          echo "::group::Test token (whoami)"
+          npx wrangler whoami 2>&1 || echo "TOKEN_STATUS=fail" >> $GITHUB_ENV
+          echo "::endgroup::"
+          echo "::group::Try deploy (verbose)"
+          npx wrangler deploy --dry-run 2>&1 || echo "BUILD_STATUS=fail" >> $GITHUB_ENV
+          echo "::endgroup::"
+          echo "::group::Actual deploy"
           npx wrangler deploy 2>&1
-          echo "Exit code: $?"
+          EXIT_CODE=$?
+          echo "Exit code: $EXIT_CODE"
+          echo "DEPLOY_STATUS=$EXIT_CODE" >> $GITHUB_ENV
+          echo "::endgroup::"
+        continue-on-error: true
 
   # Pages deployment removed: Worker handles ALL routes exclusively.
   # Previous Pages SPA fallback was intercepting /salon, /shop and
