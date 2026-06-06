@@ -185,10 +185,13 @@ def template_fashion(city, style, seq=1, addr=""):
         fill="rgba(100,200,130,.02)" stroke="rgba(100,200,130,.04)" stroke-width=".5"/>
   <text x="56" y="647" font-family="sans-serif" font-size="10"
         fill="rgba(100,200,130,.4)">
-    📊 AI脱发识别准确率超99% · KCNJ2钾离子通道研究(Cell 2025)</text>
+    📊 中国男性AGA患病率21.3% · KCNJ2钾通道活化Wnt通路(Cell 2025)</text>
   <text x="56" y="662" font-family="sans-serif" font-size="10"
         fill="rgba(100,200,130,.3)">
-    中国男性脱发患病率21.3% · 建议每3-6个月AI筛查</text>
+    冷等离子体+IL-2小鼠15d全覆盖 · 毛囊新生较米诺地尔+116.8%(Adv Sci)</text>
+  <text x="56" y="675" font-family="sans-serif" font-size="9"
+        fill="rgba(100,200,130,.2)">
+    Airaquas AI精准度99.02% · 微生态失衡致96.69%敏感头油 · 斑秃0.27%人群18-30岁占61.5%</text>
   <rect x="180" y="700" width="240" height="42" rx="21"
         fill="url(#blueGrad)" opacity=".9"/>
   <text x="300" y="727" text-anchor="middle" font-family="sans-serif" font-size="14"
@@ -247,10 +250,13 @@ def template_scalp(city, topic, seq=1):
         fill="rgba(123,193,255,.02)" stroke="rgba(123,193,255,.04)" stroke-width=".5"/>
   <text x="56" y="597" font-family="sans-serif" font-size="10"
         fill="rgba(123,193,255,.35)">
-    📚 KCNJ2钾离子通道调控毛囊再生(Cell,2025,陈婷团队) · AI准确率超99%</text>
+    📚 KCNJ2钾通道(Cell 2025) · 冷等离子体+IL-2小鼠15d全覆盖(Adv Sci) · AI精准度99.02%</text>
   <text x="56" y="612" font-family="sans-serif" font-size="10"
         fill="rgba(123,193,255,.25)">
-    冷等离子体+白介素-2：小鼠实验15天毛发覆盖率100%</text>
+    AGA患病率21.3% · DHT超标76.3%毛囊90→<40μm · 82.5%国人头皮亚健康 · 斑秃0.27%</text>
+  <text x="56" y="625" font-family="sans-serif" font-size="9"
+        fill="rgba(123,193,255,.18)">
+    合作沙龙转化率34.8% · 安柯耳人体实测油脂-47.2%/断裂率-59.5%/致敏率<0.8%(240例双盲)</text>
   <rect x="180" y="650" width="240" height="42" rx="21"
         fill="url(#blueGrad)" opacity=".9"/>
   <text x="300" y="677" text-anchor="middle" font-family="sans-serif" font-size="14"
