@@ -725,6 +725,21 @@ app.get('/detect/', (c) => c.html(DETECT_HTML));
 app.get('/fenzhen/detect', (c) => c.html(DETECT_HTML));
 app.get('/fenzhen/detect/', (c) => c.html(DETECT_HTML));
 
+// Salon pages — city-specific routes (old SPA hardcoded these)
+app.get('/tony-cities', (c) => c.html(SALON_HTML));
+app.get('/tony-cities/', (c) => c.html(SALON_HTML));
+
+// City salon links (e.g. /sh-salon-tony, /bj-salon-tony)
+// Match any path containing "-salon-tony" — these are in the old SPA
+app.get('/:slug', (c) => {
+  const slug = c.req.param('slug');
+  if (slug.endsWith('-salon-tony')) {
+    return c.html(SALON_HTML);
+  }
+  // Unknown path: serve brand SPA
+  return c.html(BRAND_HTML);
+});
+
 // Email Report API
 app.post('/api/send-report', async (c) => {
   try {
