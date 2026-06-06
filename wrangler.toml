@@ -7,7 +7,9 @@ compatibility_flags = ["nodejs_compat"]
 # Worker handles ALL traffic — root serves the full SPA
 # All functions accessed via path routes (no subdomain dependencies)
 routes = [
-  { pattern = "airaquas.hair/*", custom_domain = true },
+  { pattern = "airaquas.hair", custom_domain = true },
+  # custom_domain catches ALL paths automatically (no /* needed)
+  # Additional path routes are included for backward compat
   "airaquas.hair/salon*",
   "airaquas.hair/shop*",
   "airaquas.hair/tony-cities*",
