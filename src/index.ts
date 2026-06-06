@@ -6,6 +6,7 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { handleDetect, handleDetectHistory } from './detect-service';
+import { BRAND_HTML } from './brand-page';
 
 interface Env {
   DB: D1Database;
@@ -446,8 +447,8 @@ app.get('/api/detect/:id', async (c) => {
   return c.json({ code: 0, data: result });
 });
 
-// Root
-app.get('/', (c) => c.html(fenzhenHtml));
+// Root — serve full-featured old SPA (brand + community + products)
+app.get('/', (c) => c.html(BRAND_HTML));
 
 // Content pages
 app.get('/fenzhen', (c) => c.html(fenzhenHtml));
