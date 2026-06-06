@@ -6,10 +6,18 @@ compatibility_flags = ["nodejs_compat"]
 # ═══ Routes ═══
 # Worker handles ALL traffic — root serves the full SPA (brand + community + products)
 routes = [
-  # Main domain
-  { pattern = "airaquas.hair/*",   custom_domain = true },
-  # Wildcard subdomains — each routes to a dedicated function
-  { pattern = "*.airaquas.hair/*", custom_domain = true },
+  # Main domain (custom_domain = SSL for SaaS, auto-verified)
+  { pattern = "airaquas.hair/*", custom_domain = true },
+  # Subdomains — each must be individually declared for SSL cert issuance
+  { pattern = "detect.airaquas.hair/*",  custom_domain = true },
+  { pattern = "fenzhen.airaquas.hair/*", custom_domain = true },
+  { pattern = "guide.airaquas.hair/*",   custom_domain = true },
+  { pattern = "salon.airaquas.hair/*",   custom_domain = true },
+  { pattern = "tony.airaquas.hair/*",    custom_domain = true },
+  { pattern = "shop.airaquas.hair/*",    custom_domain = true },
+  # Wildcard catch-all (no custom_domain — requires DNS records to exist)
+  # Note: without DNS CNAME/A records on each subdomain, wildcard won't route
+  "*.airaquas.hair/*",
   # Legacy path patterns
   "airaquas.hair/fenzhen*",
   "airaquas.hair/guide*",
