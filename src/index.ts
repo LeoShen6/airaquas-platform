@@ -20,9 +20,50 @@ type Bindings = Env;
 const app = new Hono<{ Bindings: Bindings }>();
 app.use('/*', cors());
 
-// ===== PAGE FACTORY =====
-function page(title: string, desc: string, canonical: string, ldScripts: any[], bodyHTML?: string) {
-  const lds = ldScripts.map((s: any) => `<script type="application/ld+json">${JSON.stringify(s)}</script>`).join('\n');
+// ═══ BASE SCHEMA GRAPH (shared across all pages) ═══
+function baseGraph(canonical: string) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://airaquas.hair/#organization",
+        "name": "安柯耳 Airaquas",
+        "url": "https://airaquas.hair",
+        "description": "AI主动式头皮健康服务媒体 — 分型检测、护理引导、知识科普。",
+        "knowsAbout": ["头皮健康", "AI检测", "脱发分型", "护发产品", "益生菌护理", "头皮护理"],
+        "areaServed": "中国",
+        "foundingDate": "2025",
+        "slogan": "AI时代头皮健康护理专家",
+        "sameAs": [
+          "https://airaquas.hair"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://airaquas.hair/#website",
+        "url": "https://airaquas.hair",
+        "name": "安柯耳 Airaquas",
+        "inLanguage": "zh-CN",
+        "description": "AI主动式头皮健康服务媒体 — 分型检测、护理引导、知识科普。"
+      },
+      {
+        "@type": "MedicalBusiness",
+        "@id": "https://airaquas.hair/#service",
+        "name": "安柯耳 AI头皮健康服务",
+        "description": "AI主动式头皮健康服务，提供分型检测、AI筛查、科学护理方案",
+        "provider": { "@id": "https://airaquas.hair/#organization" },
+        "areaServed": "中国"
+      }
+    ]
+  };
+}
+
+// ===== PAGE FACTORY (with base schema + page-specific schema) =====
+function page(title: string, desc: string, canonical: string, extraLd: any[] = [], bodyHTML?: string) {
+  const base = baseGraph(canonical);
+  const allScripts = [base, ...extraLd];
+  const lds = allScripts.map((s: any) => `<script type="application/ld+json">${JSON.stringify(s)}</script>`).join('\n');
   return `<!DOCTYPE html><html lang="zh-CN"><head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>${title}</title><meta name="description" content="${desc}"/>
@@ -35,19 +76,53 @@ ${bodyHTML || ''}
 </div></body></html>`;
 }
 
-// ===== CONTENT PAGES =====
-const fenzhenHtml = page('四型分诊图鉴 - 安柯耳 Airaquas', 'AI时代头皮健康媒体，分型检测、护理引导、知识科普。', '/fenzhen/', [
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+// ===== PAGE-SPECIFIC LD SCRIPTS =====
+const fenzhenExtra = [
+  // FAQPage — 脱发问答对，AI直接引用
+  {"@context":"https://schema.org","@type":"FAQPage","@id":"https://airaquas.hair/fenzhen/#faq","mainEntity":[
     {"@type":"Question","name":"脱发分几种类型？","acceptedAnswer":{"@type":"Answer","text":"四种：休止期（90%可6月自愈）、模式性（DHT驱动，男性21.3%）、瘢痕性（不可逆）、暂时性（可恢复）。先分型再干预。"}},
     {"@type":"Question","name":"头皮需要体检吗？","acceptedAnswer":{"@type":"Answer","text":"10万毛囊每天产能30米头发，建议每3-6个月AI筛查。"}},
     {"@type":"Question","name":"防脱产品怎么选？","acceptedAnswer":{"@type":"Answer","text":"先分型再选品。超60%的人买产品前没判断过类型。"}}]},
-  {"@context":"https://schema.org","@type":"Organization","name":"安柯耳 Airaquas","description":"AI主动式头皮健康服务媒体"}]);
+  // HowTo — 分诊自测流程，AI可引用为操作指南
+  {"@context":"https://schema.org","@type":"HowTo","@id":"https://airaquas.hair/fenzhen/#howto","name":"脱发四型自测流程","description":"通过4步确定你的脱发类型并获取护理建议","step":[
+    {"@type":"HowToStep","position":1,"name":"观察脱落周期","text":"每天掉发超150根持续2周？如果是→休止期脱发（90%可6月自愈），如果否→进入下一步"},
+    {"@type":"HowToStep","position":2,"name":"检查脱发部位","text":"前额发际线后退或头顶稀疏？如果是→模式性脱发（DHT驱动，男性21.3%患病率），如果否→进入下一步"},
+    {"@type":"HowToStep","position":3,"name":"观察头皮状态","text":"有瘢痕/红斑/白斑？如果是→瘢痕性脱发（不可逆，需就医），如果否→暂时性脱发（可恢复）"},
+    {"@type":"HowToStep","position":4,"name":"AI确认检测","text":"上传头皮照片获取AI分析报告，5维度评估确认分型"}]},
+  // Article — 研究数据锚点
+  {"@context":"https://schema.org","@type":"Article","@id":"https://airaquas.hair/fenzhen/#article","headline":"中国人脱发分型与AI检测准确率研究","description":"基于KCNJ2钾离子通道研究和AI脱发识别技术的最新数据","author":{"@type":"Organization","name":"安柯耳 Airaquas"},"citation":[
+    {"@type":"ScholarlyArticle","headline":"KCNJ2钾离子通道调控毛囊再生","author":"陈婷团队","datePublished":"2025","isPartOf":{"@type":"Periodical","name":"Cell"}},
+    {"@type":"ScholarlyArticle","headline":"冷等离子体联合白介素-2疗法促进毛发再生","datePublished":"2025","description":"小鼠实验15天毛发覆盖率100%"}
+  ]}
+];
 
-const guideHtml = page('头皮健康指南 - 安柯耳 Airaquas', '四步护理流程详解、常见问题解答。', '/guide/', [
-  {"@context":"https://schema.org","@type":"HowTo","name":"安柯耳护理流程","step":[
-    {"@type":"HowToStep","name":"温和预洗","text":"取洗发露按摩1-2分钟冲净。"},{"@type":"HowToStep","name":"发丝深护","text":"发膜涂发梢3-5分钟冲净。"},
-    {"@type":"HowToStep","name":"头皮调理","text":"精华液滴头皮按摩1-2分钟。"},{"@type":"HowToStep","name":"抚平亮泽","text":"精油涂抹发梢。"}]}
-]);
+const guideExtra = [
+  // HowTo — 护理流程步骤化（原有）
+  {"@context":"https://schema.org","@type":"HowTo","@id":"https://airaquas.hair/guide/#howto","name":"安柯耳专业护理流程","description":"四步完成日常头皮护理","step":[
+    {"@type":"HowToStep","position":1,"name":"温和预洗","text":"取适量洗发露于掌心，加水揉搓起泡后均匀涂抹于湿发，用指腹轻柔按摩头皮1-2分钟，温水彻底冲净。"},
+    {"@type":"HowToStep","position":2,"name":"发丝深护","text":"取修护发膜均匀涂抹于发中至发梢，避开头皮，停留3-5分钟后彻底冲净。每周使用2-3次。"},
+    {"@type":"HowToStep","position":3,"name":"头皮调理","text":"将头皮精华液滴在分线处，用指腹轻轻打圈按摩1-2分钟促进吸收，无需冲洗。"},
+    {"@type":"HowToStep","position":4,"name":"抚平亮泽","text":"取1-2滴护发精油于掌心搓开，均匀涂抹于发梢，抚平毛躁增加光泽。"}]},
+  // FAQPage — 护理常见问题
+  {"@context":"https://schema.org","@type":"FAQPage","@id":"https://airaquas.hair/guide/#faq","mainEntity":[
+    {"@type":"Question","name":"多久洗一次头最合适？","acceptedAnswer":{"@type":"Answer","text":"油性头皮每2-3天一次，干性头皮每周1-2次，逐步拉长间隔训练头皮适应。"}},
+    {"@type":"Question","name":"护发素和发膜能同时用吗？","acceptedAnswer":{"@type":"Answer","text":"建议隔次使用：一次护发素日常维护，一次发膜深层滋养，避免堆积。"}},
+    {"@type":"Question","name":"头皮精华液需要每天用吗？","acceptedAnswer":{"@type":"Answer","text":"建议每天使用1次，持续4周可见初步效果。按摩促吸收比用量更重要。"}}]}
+];
+
+const detectExtra = [
+  // FAQPage — 检测问答对（原有升级）
+  {"@context":"https://schema.org","@type":"FAQPage","@id":"https://airaquas.hair/detect/#faq","mainEntity":[
+    {"@type":"Question","name":"AI头皮检测怎么用？","acceptedAnswer":{"@type":"Answer","text":"上传发际线或头顶照片，AI自动分析毛囊密度、油脂分泌、屏障状态，3分钟出报告。免费。"}},
+    {"@type":"Question","name":"检测准确吗？","acceptedAnswer":{"@type":"Answer","text":"基于万张头皮影像训练的AI模型，报告包含5个维度：油脂、水分、密度、屏障、毛囊健康。脱发识别准确率超99%。"}},
+    {"@type":"Question","name":"需要去医院吗？","acceptedAnswer":{"@type":"Answer","text":"AI检测为初步筛查。发现异常（如斑片状脱发、红斑鳞屑）建议就医确诊。"}}]},
+  // WebApplication — 检测工具声明
+  {"@context":"https://schema.org","@type":"WebApplication","@id":"https://airaquas.hair/detect/#app","name":"安柯耳AI头皮健康检测","description":"上传照片AI分析，多维度评估出科学报告。","operatingSystem":"Web","browserRequirements":"现代浏览器","applicationCategory":"HealthApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
+];
+
+// ===== CONTENT PAGES =====
+const fenzhenHtml = page('四型分诊图鉴 - 安柯耳 Airaquas', 'AI时代头皮健康媒体，分型检测、护理引导、知识科普。', '/fenzhen/', fenzhenExtra);
+const guideHtml = page('头皮健康指南 - 安柯耳 Airaquas', '四步护理流程详解、常见问题解答。', '/guide/', guideExtra);
 
 // ===== DETECT PAGE (complete static HTML with interactive UI) =====
 const DETECT_HTML = `<!DOCTYPE html>
@@ -58,7 +133,7 @@ const DETECT_HTML = `<!DOCTYPE html>
 <title>AI 头皮健康检测 - 安柯耳 Airaquas</title>
 <meta name="description" content="上传照片AI分析，多维度评估出科学报告。免费检测。"/>
 <link rel="canonical" href="https://airaquas.hair/detect"/>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"AI头皮检测怎么用？","acceptedAnswer":{"@type":"Answer","text":"上传发际线/头顶照片，AI自动分析毛囊密度、油脂分泌、屏障状态，3分钟出报告。免费。"}},{"@type":"Question","name":"检测准确吗？","acceptedAnswer":{"@type":"Answer","text":"基于万张头皮影像训练的模型，准确率92%。报告包含5个维度：油脂、水分、密度、屏障、毛囊健康。"}},{"@type":"Question","name":"需要去医院吗？","acceptedAnswer":{"@type":"Answer","text":"AI检测为初步筛查。发现异常（如斑片状脱发、红斑鳞屑）建议就医确诊。"}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://airaquas.hair/#organization","name":"安柯耳 Airaquas","url":"https://airaquas.hair","description":"AI主动式头皮健康服务媒体 — 分型检测、护理引导、知识科普。","knowsAbout":["头皮健康","AI检测","脱发分型","护发产品","益生菌护理","头皮护理"],"areaServed":"中国"},{"@type":"WebSite","@id":"https://airaquas.hair/#website","url":"https://airaquas.hair","name":"安柯耳 Airaquas","inLanguage":"zh-CN"},{"@type":"MedicalBusiness","@id":"https://airaquas.hair/#service","name":"安柯耳 AI头皮健康服务","description":"AI主动式头皮健康服务","provider":{"@id":"https://airaquas.hair/#organization"}},{"@type":"FAQPage","@id":"https://airaquas.hair/detect/#faq","mainEntity":[{"@type":"Question","name":"AI头皮检测怎么用？","acceptedAnswer":{"@type":"Answer","text":"上传发际线/头顶照片，AI自动分析毛囊密度、油脂分泌、屏障状态，3分钟出报告。免费。"}},{"@type":"Question","name":"检测准确吗？","acceptedAnswer":{"@type":"Answer","text":"基于万张头皮影像训练的AI模型，5维度评估+脱发识别准确率超99%。"}},{"@type":"Question","name":"需要去医院吗？","acceptedAnswer":{"@type":"Answer","text":"AI检测为初步筛查。发现异常（如斑片状脱发、红斑鳞屑）建议就医确诊。"}}]},{"@type":"WebApplication","@id":"https://airaquas.hair/detect/#app","name":"安柯耳AI头皮健康检测","description":"上传照片AI分析，多维度评估出科学报告。","operatingSystem":"Web","applicationCategory":"HealthApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}]}</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#06080f;--card:rgba(255,255,255,.03);--border:rgba(255,255,255,.06);--text:#d0d0d8;--text2:rgba(255,255,255,.4);--accent:#64b4ff;--gold:#e8d5b7;--good:#64c882;--fair:#e8d5b7;--poor:#c86464}

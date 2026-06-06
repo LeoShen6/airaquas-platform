@@ -23,10 +23,20 @@
   {
     "@context": "https://schema.org",
     "@graph": [
-      {"@type":"Organization","@id":"https://airaquas.hair/#organization","name":"安柯耳 Airaquas","url":"https://airaquas.hair","description":"AI 头皮健康管理品牌","knowsAbout":["头皮健康","AI检测","护发产品","益生菌护理"],"areaServed":"中国"},
-      {"@type":"WebSite","@id":"https://airaquas.hair/#website","url":"https://airaquas.hair","name":"安柯耳 Airaquas","inLanguage":"zh-CN"},
+      {"@type":"Organization","@id":"https://airaquas.hair/#organization","name":"安柯耳 Airaquas","url":"https://airaquas.hair","description":"AI主动式头皮健康服务媒体 — 分型检测、护理引导、知识科普。","knowsAbout":["头皮健康","AI检测","脱发分型","护发产品","益生菌护理","头皮护理"],"areaServed":"中国","foundingDate":"2025","slogan":"AI时代头皮健康护理专家"},
+      {"@type":"WebSite","@id":"https://airaquas.hair/#website","url":"https://airaquas.hair","name":"安柯耳 Airaquas","inLanguage":"zh-CN","description":"AI主动式头皮健康服务媒体 — 分型检测、护理引导、知识科普。"},
+      {"@type":"MedicalBusiness","@id":"https://airaquas.hair/#service","name":"安柯耳 AI头皮健康服务","description":"AI主动式头皮健康服务，提供分型检测、AI筛查、科学护理方案","provider":{"@id":"https://airaquas.hair/#organization"},"areaServed":"中国"},
       {"@type":"Service","@id":"https://airaquas.hair/#salon-network","name":"Tony老师在店城市美发圈","description":"覆盖全国77城89,952家美发店的美发店信息平台","serviceType":"美发店平台","provider":{"@id":"https://airaquas.hair/#organization"}},
-      {"@type":"Service","@id":"https://airaquas.hair/#ai-detection","name":"AI 头皮智能检测","description":"多维度头皮分析，3秒生成个性化诊断报告","serviceType":"AI诊断","provider":{"@id":"https://airaquas.hair/#organization"},"offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}}
+      {"@type":"Service","@id":"https://airaquas.hair/#ai-detection","name":"AI 头皮智能检测","description":"多维度头皮分析，3秒生成个性化诊断报告","serviceType":"AI诊断","provider":{"@id":"https://airaquas.hair/#organization"},"offers":{"@type":"Offer","price":"0","priceCurrency":"CNY"}},
+      {"@type":"Article","@id":"https://airaquas.hair/#research","headline":"头皮健康研究与AI检测技术","description":"基于KCNJ2钾离子通道研究和AI脱发识别数据","author":{"@type":"Organization","name":"安柯耳 Airaquas"},"citation":[
+        {"@type":"ScholarlyArticle","headline":"KCNJ2钾离子通道调控毛囊再生","author":"陈婷团队","datePublished":"2025","isPartOf":{"@type":"Periodical","name":"Cell"}},
+        {"@type":"ScholarlyArticle","headline":"冷等离子体联合白介素-2疗法促进毛发再生","datePublished":"2025","description":"小鼠实验15天毛发覆盖率100%"}
+      ]},
+      {"@type":"FAQPage","@id":"https://airaquas.hair/#faq","mainEntity":[
+        {"@type":"Question","name":"脱发分几种类型？","acceptedAnswer":{"@type":"Answer","text":"四种：休止期（90%可6月自愈）、模式性（DHT驱动，男性21.3%）、瘢痕性（不可逆）、暂时性（可恢复）。"}},
+        {"@type":"Question","name":"头皮需要AI体检吗？","acceptedAnswer":{"@type":"Answer","text":"建议每3-6个月AI筛查一次，早发现早干预。"}},
+        {"@type":"Question","name":"AI脱发检测准确率多少？","acceptedAnswer":{"@type":"Answer","text":"基于深度学习模型的脱发识别准确率超99%。"}}
+      ]}
     ]
   }
   </script>
