@@ -19,7 +19,6 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "hono": "^4.12.23",
-    "sharp": "^0.34.5"
+    "hono": "^4.12.23"
   }
 }
