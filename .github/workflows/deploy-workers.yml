@@ -26,7 +26,9 @@ jobs:
       - name: Deploy Worker (airaquas-platform)
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-        run: npx wrangler deploy
+        run: |
+          npx wrangler deploy 2>&1
+          echo "Exit code: $?"
 
   # Pages deployment removed: Worker handles ALL routes exclusively.
   # Previous Pages SPA fallback was intercepting /salon, /shop and

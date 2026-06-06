@@ -669,49 +669,41 @@ h1{font-size:22px;color:#e8e4dc;font-weight:600;margin-bottom:4px}
 </div></body></html>`;
 
 // ═══ SUBDOMAIN FALLBACK ═══
-// If a subdomain somehow reaches the Worker (DNS setup), route it
-// Otherwise all traffic goes through path routes on the main domain
+// If a subdomain somehow reaches the Worker (DNS setup), redirect to main
 app.use('*', async (c, next) => {
   if (c.req.method !== 'GET') return next();
   const host = c.req.header('host') || '';
   const subdomain = host.split('.')[0];
   if (!subdomain || subdomain === 'airaquas' || host === 'airaquas.hair') return next();
-  // Redirect subdomain visitors to path routes
   return c.redirect('https://airaquas.hair/', 302);
 });
 
-// ═══ CONTENT ROUTING ═══
-// All GET paths handled via middleware to avoid Hono route ordering issues
-app.use('*', async (c, next) => {
-  if (c.req.method !== 'GET') return next();
+// ═══ Hono route handlers (simpler & more reliable than middleware routing) ═══
+app.get('/', (c) => c.html(BRAND_HTML));
+app.get('/salon', (c) => c.html(SALON_HTML));
+app.get('/salon/', (c) => c.html(SALON_HTML));
+app.get('/shop', (c) => c.html(SHOP_HTML));
+app.get('/shop/', (c) => c.html(SHOP_HTML));
+app.get('/fenzhen', (c) => c.html(fenzhenHtml));
+app.get('/fenzhen/', (c) => c.html(fenzhenHtml));
+app.get('/guide', (c) => c.html(guideHtml));
+app.get('/guide/', (c) => c.html(guideHtml));
+app.get('/detect', (c) => c.html(DETECT_HTML));
+app.get('/detect/', (c) => c.html(DETECT_HTML));
+app.get('/tony-cities', (c) => c.html(SALON_HTML));
+app.get('/tony-cities/', (c) => c.html(SALON_HTML));
 
-  const url = new URL(c.req.url);
-  const path = url.pathname.replace(/\/+$/, '');  // normalize trailing slash
-
-  // API routes — passthrough to Hono route handlers
-  if (path.startsWith('/api/') || path.startsWith('/fenzhen/status') || path.startsWith('/fenzhen/poster')) {
-    return next();
-  }
-
-  // Known content paths
-  if (path === '/' || path === '') return c.html(BRAND_HTML);
-  if (path === '/salon' || path === '/tony-cities') return c.html(SALON_HTML);
-  if (path === '/shop') return c.html(SHOP_HTML);
-  if (path === '/fenzhen' || path.startsWith('/fenzhen/')) {
-    if (path === '/fenzhen/detect') return c.html(DETECT_HTML);
-    return c.html(fenzhenHtml);
-  }
-  if (path === '/guide') return c.html(guideHtml);
-  if (path === '/detect') return c.html(DETECT_HTML);
-
-  // Legacy city salon links: /sh-salon-tony, /bj-salon-tony, etc.
-  if (path.endsWith('-salon-tony')) return c.html(SALON_HTML);
-
+// Legacy city salon links: match /xxx-salon-tony pattern
+// These are hardcoded in the old SPA (sh-salon-tony, bj-salon-tony, etc.)
+app.get('/:slug', (c) => {
+  const slug = c.req.param('slug');
+  // Check if this looks like a legacy city-salon link
+  if (slug.endsWith('-salon-tony')) return c.html(SALON_HTML);
   // Everything else → brand SPA
   return c.html(BRAND_HTML);
 });
 
-// API routes (must be registered AFTER middleware or they won't be hit)
+// API routes
 app.get('/fenzhen/poster', (c) => {
   const s = c.req.query('s') || '78';
   const t = c.req.query('t') || 'mixed';
