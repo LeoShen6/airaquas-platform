@@ -42,4 +42,4 @@ binding = "AI"
 
 # ═══ Environment variables ═══
 [vars]
-AI_PROVIDER = "workers-ai"
+AI_PROVIDER = "dashscope"
