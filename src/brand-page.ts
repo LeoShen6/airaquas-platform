@@ -667,16 +667,16 @@ export const BRAND_HTML = `<!DOCTYPE html>
         <div class="hub-desc">四步护理流程 + 常见问题</div>
         <div class="hub-domain">guide.airaquas.hair</div>
       </a>
-      <a href="https://airaquas.hair#network" class="hub-card">
+      <a href="https://salon.airaquas.hair" class="hub-card">
         <div class="hub-icon">🗺️</div>
         <div class="hub-name">城市美发圈</div>
-        <div class="hub-desc">77城 · 9万+ 合作美发店</div>
+        <div class="hub-desc">77城 · 10万+ 合作美发店</div>
         <div class="hub-domain">salon.airaquas.hair</div>
       </a>
-      <a href="#products" class="hub-card">
+      <a href="https://shop.airaquas.hair" class="hub-card">
         <div class="hub-icon">🛒</div>
         <div class="hub-name">安柯耳洗护商城</div>
-        <div class="hub-desc">AI定制 · 科学洗护方案</div>
+        <div class="hub-desc">AI定制 · 12周人体实测有效</div>
         <div class="hub-domain">shop.airaquas.hair</div>
       </a>
     </div>

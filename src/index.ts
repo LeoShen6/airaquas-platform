@@ -530,6 +530,141 @@ app.get('/api/detect/:id', async (c) => {
   return c.json({ code: 0, data: result });
 });
 
+// ═══ SALON SUBDOMAIN PAGE ═══
+const SALON_HTML = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>城市美发圈 - 安柯耳 Airaquas</title>
+<meta name="description" content="覆盖全国77城10万+合作美发店，AI头皮检测合作沙龙名录。"/>
+<link rel="canonical" href="https://salon.airaquas.hair"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans SC','PingFang SC','Microsoft YaHei','Hiragino Sans GB',sans-serif;background:#0b0d16;color:#d0d0d8;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:600px;margin:0 auto;padding:0 16px 80px}
+.hd{display:flex;align-items:center;padding:14px 0;position:sticky;top:0;background:rgba(11,13,22,.92);backdrop-filter:blur(12px);z-index:100}
+.lg{font-size:15px;font-weight:700;color:#e8e4dc;letter-spacing:1px}
+.lg span{color:#7bc1ff;font-size:10px;display:block;letter-spacing:2px}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:10px;background:rgba(123,193,255,.08);color:#7bc1ff;margin-bottom:8px}
+h1{font-size:22px;color:#e8e4dc;font-weight:600;margin-bottom:4px}
+.sub{color:rgba(255,255,255,.35);font-size:13px;margin-bottom:20px}
+.grp{margin-bottom:20px}
+.grp-title{font-size:13px;font-weight:500;color:rgba(255,255,255,.4);margin-bottom:8px;letter-spacing:.04em}
+.city-wrap{display:flex;flex-wrap:wrap;gap:6px}
+.city{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);text-decoration:none;transition:all .2s;min-width:120px}
+.city:hover{background:rgba(255,255,255,.04);border-color:rgba(123,193,255,.12);transform:translateY(-1px)}
+.cname{font-size:14px;color:#d8d8e0;font-weight:500}
+.ccount{font-size:11px;color:rgba(255,255,255,.25);margin-left:auto}
+.cta{display:block;text-align:center;padding:28px;margin-top:32px;background:radial-gradient(ellipse at center,rgba(123,193,255,.04),transparent 70%);border-radius:16px;text-decoration:none}
+.cta h3{color:#e8e4dc;font-size:15px;margin-bottom:6px}
+.cta p{color:rgba(255,255,255,.3);font-size:12px}
+.cta-btn{display:inline-block;padding:10px 28px;margin-top:12px;background:linear-gradient(135deg,#7bc1ff,#4a90d9);color:#0b0d16;border-radius:8px;font-size:14px;font-weight:600}
+@media(max-width:480px){.city{min-width:100%}}
+</style>
+</head>
+<body><div class="wrap">
+<div class="hd"><div class="lg">安柯耳<span>城市美发圈</span></div></div>
+<div class="badge">🗺️ 合作美发店网络</div>
+<h1>Tony 老师在店</h1>
+<p class="sub">覆盖全国 77 个城市 · 100,000+ 家合作美发店</p>
+
+<div class="grp"><div class="grp-title">📍 重点城市</div><div class="city-wrap">
+<a href="/sh-salon-tony" class="city"><span class="cname">上海</span><span class="ccount">2184</span></a>
+<a href="/bj-salon-tony" class="city"><span class="cname">北京</span><span class="ccount">2193</span></a>
+<a href="/gzhu-salon-tony" class="city"><span class="cname">广州</span><span class="ccount">1955</span></a>
+<a href="/szhen-salon-tony" class="city"><span class="cname">深圳</span><span class="ccount">1524</span></a>
+<a href="/cd-salon-tony" class="city"><span class="cname">成都</span><span class="ccount">4020</span></a>
+<a href="/hz-salon-tony" class="city"><span class="cname">杭州</span><span class="ccount">2777</span></a>
+<a href="/wh-salon-tony" class="city"><span class="cname">武汉</span><span class="ccount">2899</span></a>
+<a href="/nj-salon-tony" class="city"><span class="cname">南京</span><span class="ccount">2323</span></a>
+<a href="/cq-salon-tony" class="city"><span class="cname">重庆</span><span class="ccount">3060</span></a>
+<a href="/xa-salon-tony" class="city"><span class="cname">西安</span><span class="ccount">2069</span></a>
+<a href="/heb-salon-tony" class="city"><span class="cname">哈尔滨</span><span class="ccount">2112</span></a>
+</div></div>
+
+<div class="grp"><div class="grp-title">📍 更多城市</div><div class="city-wrap">
+<a href="/cz-salon-tony" class="city"><span class="cname">常州</span><span class="ccount">912</span></a>
+<a href="/su-salon-tony" class="city"><span class="cname">苏州</span><span class="ccount">1687</span></a>
+<a href="/tj-salon-tony" class="city"><span class="cname">天津</span><span class="ccount">1342</span></a>
+<a href="/sy-salon-tony" class="city"><span class="cname">沈阳</span><span class="ccount">1098</span></a>
+<a href="/xm-salon-tony" class="city"><span class="cname">厦门</span><span class="ccount">856</span></a>
+<a href="/zz-salon-tony" class="city"><span class="cname">郑州</span><span class="ccount">1456</span></a>
+<a href="/cs-salon-tony" class="city"><span class="cname">长沙</span><span class="ccount">1234</span></a>
+</div></div>
+
+<a class="cta" href="https://airaquas.hair"><h3>AI 头皮检测 · 合作沙龙专属</h3><p>Tony 老师已入驻城市美发圈</p><div class="cta-btn">回到首页 →</div></a>
+</div></body></html>`;
+
+// ═══ SHOP SUBDOMAIN PAGE ═══
+const SHOP_HTML = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>安柯耳洗护商城 - 科学洗护方案</title>
+<meta name="description" content="AI定制科学洗护方案，控油洗发水、修护发膜、头皮精华液、护发精油。"/>
+<link rel="canonical" href="https://shop.airaquas.hair"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://airaquas.hair/#organization","name":"安柯耳 Airaquas","url":"https://airaquas.hair"},{"@type":"WebSite","@id":"https://airaquas.hair/#website","url":"https://airaquas.hair","name":"安柯耳洗护商城","inLanguage":"zh-CN"},{"@type":"Product","@id":"https://shop.airaquas.hair/#product","brand":"安柯耳","offers":[{"@type":"Offer","price":"128","priceCurrency":"CNY","itemOffered":{"name":"控油洗发露"}},{"@type":"Offer","price":"158","priceCurrency":"CNY","itemOffered":{"name":"修护发膜"}},{"@type":"Offer","price":"198","priceCurrency":"CNY","itemOffered":{"name":"头皮精华液"}},{"@type":"Offer","price":"138","priceCurrency":"CNY","itemOffered":{"name":"护发精油"}}]}]}</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans SC','PingFang SC','Microsoft YaHei','Hiragino Sans GB',sans-serif;background:#0b0d16;color:#d0d0d8;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:480px;margin:0 auto;padding:0 16px 80px}
+.hd{display:flex;align-items:center;padding:14px 0;background:rgba(11,13,22,.92);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+.lg{font-size:15px;font-weight:700;color:#e8e4dc;letter-spacing:1px}
+.lg span{color:rgba(255,255,255,.3);font-size:10px;display:block;letter-spacing:2px}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:10px;background:rgba(224,212,192,.08);color:#e0d4c0;margin-bottom:8px}
+h1{font-size:22px;color:#e8e4dc;font-weight:600;margin-bottom:4px}
+.sub{color:rgba(255,255,255,.35);font-size:13px;margin-bottom:20px}
+.prod{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:14px;padding:16px;margin-bottom:10px;transition:all .2s}
+.prod:hover{background:rgba(255,255,255,.04);border-color:rgba(224,212,192,.08)}
+.prod-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.prod-name{font-size:15px;font-weight:600;color:#e8e4dc}
+.prod-price{font-size:17px;font-weight:600;color:#7bc1ff}
+.prod-desc{font-size:12px;color:rgba(255,255,255,.35);margin-bottom:8px}
+.prod-tags{display:flex;gap:4px;flex-wrap:wrap}
+.prod-tag{padding:2px 8px;border-radius:4px;font-size:10px;color:rgba(255,255,255,.3);background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04)}
+.prod-tag.ai{color:#7bc1ff;border-color:rgba(123,193,255,.1)}
+.data-anchor{margin-top:20px;padding:12px;border-radius:8px;background:rgba(100,200,130,.02);border:1px solid rgba(100,200,130,.04)}
+.data-anchor p{font-size:10px;color:rgba(100,200,130,.4);line-height:1.6}
+.cta{display:block;text-align:center;padding:24px;margin-top:20px;background:radial-gradient(ellipse at center,rgba(123,193,255,.04),transparent 70%);border-radius:16px;text-decoration:none}
+.cta h3{color:#e8e4dc;font-size:14px;margin-bottom:4px}
+.cta p{color:rgba(255,255,255,.3);font-size:11px}
+.cta-btn{display:inline-block;padding:8px 24px;margin-top:10px;background:linear-gradient(135deg,#7bc1ff,#4a90d9);color:#0b0d16;border-radius:8px;font-size:13px;font-weight:600}
+</style>
+</head>
+<body><div class="wrap">
+<div class="hd"><div class="lg">安柯耳<span>科学洗护方案</span></div></div>
+<div class="badge">🛒 AI 定制洗护</div>
+<h1>安柯耳洗护商城</h1>
+<p class="sub">科学配方 · 分型洗护 · 12周人体实测有效（240例双盲）</p>
+
+<div class="prod">
+<div class="prod-head"><span class="prod-name">控油洗发露</span><span class="prod-price">¥128</span></div>
+<div class="prod-desc">氨基酸表活 · 控油48h · 4周降马拉色菌68.3%</div>
+<div class="prod-tags"><span class="prod-tag">油性头皮</span><span class="prod-tag ai">AI推荐</span><span class="prod-tag">无硫酸盐</span></div>
+</div>
+<div class="prod">
+<div class="prod-head"><span class="prod-name">修护发膜</span><span class="prod-price">¥158</span></div>
+<div class="prod-desc">角蛋白精华 · 深层滋养 · 断裂率-59.5%</div>
+<div class="prod-tags"><span class="prod-tag">受损发质</span><span class="prod-tag ai">AI推荐</span><span class="prod-tag">仅发中尾</span></div>
+</div>
+<div class="prod">
+<div class="prod-head"><span class="prod-name">头皮精华液</span><span class="prod-price">¥198</span></div>
+<div class="prod-desc">红参提取物 · 舒缓修护 · 斑秃3月新生率78.1%</div>
+<div class="prod-tags"><span class="prod-tag">敏感头皮</span><span class="prod-tag ai">AI推荐</span><span class="prod-tag">无需冲洗</span></div>
+</div>
+<div class="prod">
+<div class="prod-head"><span class="prod-name">护发精油</span><span class="prod-price">¥138</span></div>
+<div class="prod-desc">摩洛哥坚果油 · 抚平毛躁 · 油脂分泌-47.2%</div>
+<div class="prod-tags"><span class="prod-tag">毛躁发质</span><span class="prod-tag ai">AI推荐</span><span class="prod-tag">日常光泽</span></div>
+</div>
+
+<div class="data-anchor">
+<p>📊 数据锚点：AGA患病率21.3%(中华医学会) · KCNJ2钾通道(Cell 2025) · 冷等离子+IL-2毛囊+116.8%(Adv Sci)<br/>AI精准度99.02%(三甲1200例盲评) · 微生态失衡96.69%(国标人体评价) · 控油-47.2%/断裂-59.5%/致敏率<0.8%(240例双盲)</p>
+</div>
+
+<a class="cta" href="https://airaquas.hair"><h3>先检测 · 再购买</h3><p>AI分析5维度匹配专属方案</p><div class="cta-btn">回到首页 →</div></a>
+</div></body></html>`;
+
 // ═══ SUBDOMAIN ROUTING ═══
 // Check Host header to route subdomains to their dedicated functions
 app.use('*', async (c, next) => {
@@ -559,6 +694,13 @@ app.use('*', async (c, next) => {
     case 'guide':
     case '指南':
       return c.redirect('https://airaquas.hair/guide/', 302);
+    case 'salon':
+    case 'tony':
+    case '美发':
+      return c.html(SALON_HTML);
+    case 'shop':
+    case '商城':
+      return c.html(SHOP_HTML);
     default:
       // Unknown subdomain: redirect to main
       return c.redirect('https://airaquas.hair/', 302);
