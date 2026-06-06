@@ -530,6 +530,41 @@ app.get('/api/detect/:id', async (c) => {
   return c.json({ code: 0, data: result });
 });
 
+// ═══ SUBDOMAIN ROUTING ═══
+// Check Host header to route subdomains to their dedicated functions
+app.use('*', async (c, next) => {
+  // Only intercept GET requests at root
+  if (c.req.method !== 'GET') return next();
+
+  const host = c.req.header('host') || '';
+  const subdomain = host.split('.')[0];
+
+  // Skip if main domain or no subdomain
+  if (!subdomain || subdomain === 'airaquas' || host === 'airaquas.hair') {
+    return next();
+  }
+
+  const url = new URL(c.req.url);
+  // Only redirect root of subdomains, not nested paths
+  if (url.pathname !== '/' && url.pathname !== '') return next();
+
+  // Known subdomains → serve dedicated function
+  switch (subdomain) {
+    case 'detect':
+    case '检测':
+      return c.html(DETECT_HTML);
+    case 'fenzhen':
+    case '分诊':
+      return c.redirect('https://airaquas.hair/fenzhen/', 302);
+    case 'guide':
+    case '指南':
+      return c.redirect('https://airaquas.hair/guide/', 302);
+    default:
+      // Unknown subdomain: redirect to main
+      return c.redirect('https://airaquas.hair/', 302);
+  }
+});
+
 // Root — serve full-featured old SPA (brand + community + products)
 app.get('/', (c) => c.html(BRAND_HTML));
 

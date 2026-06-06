@@ -6,7 +6,11 @@ compatibility_flags = ["nodejs_compat"]
 # ═══ Routes ═══
 # Worker handles ALL traffic — root serves the full SPA (brand + community + products)
 routes = [
+  # Main domain
   { pattern = "airaquas.hair/*",   custom_domain = true },
+  # Wildcard subdomains — each routes to a dedicated function
+  { pattern = "*.airaquas.hair/*", custom_domain = true },
+  # Legacy path patterns
   "airaquas.hair/fenzhen*",
   "airaquas.hair/guide*",
   "airaquas.hair/research*",

@@ -483,6 +483,84 @@
       nav{padding:.4rem .8rem}
       .nav-link{font-size:.65rem;padding:.2rem .5rem}
     }
+
+    /* ══ Function Hub (subdomain entry) ══ */
+    .hub-section{
+      padding:3.5rem 0 4rem;
+      position:relative;
+    }
+    .hub-section::before{
+      content:'';
+      position:absolute;
+      top:0;left:10%;right:10%;height:1px;
+      background:linear-gradient(90deg,transparent,rgba(224,212,192,.08),transparent);
+    }
+    .hub-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:1rem;
+      margin-top:2rem;
+    }
+    .hub-card{
+      background:rgba(255,255,255,.02);
+      border:1px solid rgba(255,255,255,.04);
+      border-radius:14px;
+      padding:1.4rem 1rem;
+      text-align:center;
+      text-decoration:none;
+      transition:all .3s cubic-bezier(.4,0,.2,1);
+      position:relative;
+      overflow:hidden;
+    }
+    .hub-card:hover{
+      background:rgba(255,255,255,.04);
+      border-color:rgba(123,193,255,.12);
+      transform:translateY(-4px);
+      box-shadow:0 8px 30px rgba(0,0,0,.3);
+    }
+    .hub-card::after{
+      content:'';
+      position:absolute;
+      top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,transparent,rgba(123,193,255,.2),transparent);
+      opacity:0;
+      transition:opacity .3s;
+    }
+    .hub-card:hover::after{opacity:1}
+    .hub-icon{
+      font-size:2rem;
+      margin-bottom:.5rem;
+      line-height:1;
+    }
+    .hub-name{
+      font-size:.9rem;
+      font-weight:600;
+      color:#e8e4dc;
+      margin-bottom:.3rem;
+    }
+    .hub-desc{
+      font-size:.72rem;
+      color:rgba(255,255,255,.35);
+      line-height:1.4;
+    }
+    .hub-domain{
+      margin-top:.6rem;
+      font-size:.6rem;
+      font-family:'SF Mono','Menlo','Consolas',monospace;
+      color:rgba(123,193,255,.25);
+      letter-spacing:.02em;
+      transition:color .3s;
+    }
+    .hub-card:hover .hub-domain{
+      color:rgba(123,193,255,.5);
+    }
+    @media(max-width:480px){
+      .hub-grid{grid-template-columns:repeat(2,1fr);gap:.7rem}
+      .hub-card{padding:1.1rem .7rem}
+      .hub-icon{font-size:1.6rem}
+      .hub-name{font-size:.8rem}
+      .hub-desc{font-size:.65rem}
+    }
   </style>
   <!-- 报告导出库（defer 确保按需可用） -->
   <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -561,6 +639,47 @@
     <a href="#network" class="cta-ghost">🏙️ 逛城市美发圈 <span class="cta-arrow">→</span></a>
   </div>
   <div class="hero-sub">微信小程序即将上线 · 敬请期待</div>
+</section>
+
+<!-- ══ FUNCTION HUB — 二级域名入口 ══ -->
+<section class="hub-section" id="hub">
+  <div class="container">
+    <div class="fade-up"><div class="section-label">一站直达</div></div>
+    <div class="fade-up"><h2 class="section-title">你想做什么？</h2></div>
+    <div class="fade-up"><p class="section-sub">选择功能，直接跳转</p></div>
+    <div class="hub-grid">
+      <a href="https://detect.airaquas.hair" class="hub-card">
+        <div class="hub-icon">🔬</div>
+        <div class="hub-name">AI 头皮检测</div>
+        <div class="hub-desc">上传照片，3分钟出科学报告</div>
+        <div class="hub-domain">detect.airaquas.hair</div>
+      </a>
+      <a href="https://fenzhen.airaquas.hair" class="hub-card">
+        <div class="hub-icon">📋</div>
+        <div class="hub-name">四型分诊图鉴</div>
+        <div class="hub-desc">分型自测，先判断再护理</div>
+        <div class="hub-domain">fenzhen.airaquas.hair</div>
+      </a>
+      <a href="https://guide.airaquas.hair" class="hub-card">
+        <div class="hub-icon">📖</div>
+        <div class="hub-name">头皮健康指南</div>
+        <div class="hub-desc">四步护理流程 + 常见问题</div>
+        <div class="hub-domain">guide.airaquas.hair</div>
+      </a>
+      <a href="https://airaquas.hair#network" class="hub-card">
+        <div class="hub-icon">🗺️</div>
+        <div class="hub-name">城市美发圈</div>
+        <div class="hub-desc">77城 · 9万+ 合作美发店</div>
+        <div class="hub-domain">salon.airaquas.hair</div>
+      </a>
+      <a href="#products" class="hub-card">
+        <div class="hub-icon">🛒</div>
+        <div class="hub-name">安柯耳洗护商城</div>
+        <div class="hub-desc">AI定制 · 科学洗护方案</div>
+        <div class="hub-domain">shop.airaquas.hair</div>
+      </a>
+    </div>
+  </div>
 </section>
 
 <!-- ══ CITY NETWORK ══ -->
