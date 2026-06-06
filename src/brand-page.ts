@@ -583,7 +583,7 @@ export const BRAND_HTML = `<!DOCTYPE html>
 <nav id="navbar">
   <div class="nav-brand">🦞 Airaquas</div>
   <div class="nav-links">
-    <a href="https://salon.airaquas.hair" class="nav-link">🏙️ 城市美发圈</a>
+    <a href="/salon" class="nav-link">🏙️ 城市美发圈</a>
     <a href="javascript:void(0)" class="nav-link highlight user-area" id="userArea" onclick="openLogin()" style="font-size:.65rem">👤 登录</a>
     <a href="javascript:void(0)" class="nav-link user-area nav-profile" id="userProfileWrap" onclick="toggleDropdown()" style="display:none;font-size:.65rem">
       <span id="userProfileName"></span>
@@ -637,7 +637,7 @@ export const BRAND_HTML = `<!DOCTYPE html>
   </div>
   <div class="cta-row">
     <a href="#detect" class="cta">AI 免费检测 <span class="cta-arrow">→</span></a>
-    <a href="https://salon.airaquas.hair" class="cta-ghost">🏙️ 逛城市美发圈 <span class="cta-arrow">→</span></a>
+    <a href="/salon" class="cta-ghost">🏙️ 逛城市美发圈 <span class="cta-arrow">→</span></a>
   </div>
   <div class="hero-sub">微信小程序即将上线 · 敬请期待</div>
 </section>
@@ -649,35 +649,35 @@ export const BRAND_HTML = `<!DOCTYPE html>
     <div class="fade-up"><h2 class="section-title">你想做什么？</h2></div>
     <div class="fade-up"><p class="section-sub">选择功能，直接跳转</p></div>
     <div class="hub-grid">
-      <a href="https://detect.airaquas.hair" class="hub-card">
+      <a href="/detect" class="hub-card">
         <div class="hub-icon">🔬</div>
         <div class="hub-name">AI 头皮检测</div>
         <div class="hub-desc">上传照片，3分钟出科学报告</div>
-        <div class="hub-domain">detect.airaquas.hair</div>
+        <div class="hub-domain">airaquas.hair/detect</div>
       </a>
-      <a href="https://fenzhen.airaquas.hair" class="hub-card">
+      <a href="/fenzhen" class="hub-card">
         <div class="hub-icon">📋</div>
         <div class="hub-name">四型分诊图鉴</div>
         <div class="hub-desc">分型自测，先判断再护理</div>
-        <div class="hub-domain">fenzhen.airaquas.hair</div>
+        <div class="hub-domain">airaquas.hair/fenzhen</div>
       </a>
-      <a href="https://guide.airaquas.hair" class="hub-card">
+      <a href="/guide" class="hub-card">
         <div class="hub-icon">📖</div>
         <div class="hub-name">头皮健康指南</div>
         <div class="hub-desc">四步护理流程 + 常见问题</div>
-        <div class="hub-domain">guide.airaquas.hair</div>
+        <div class="hub-domain">airaquas.hair/guide</div>
       </a>
-      <a href="https://salon.airaquas.hair" class="hub-card">
+      <a href="/salon" class="hub-card">
         <div class="hub-icon">🗺️</div>
         <div class="hub-name">城市美发圈</div>
         <div class="hub-desc">77城 · 10万+ 合作美发店</div>
-        <div class="hub-domain">salon.airaquas.hair</div>
+        <div class="hub-domain">airaquas.hair/salon</div>
       </a>
-      <a href="https://shop.airaquas.hair" class="hub-card">
+      <a href="/shop" class="hub-card">
         <div class="hub-icon">🛒</div>
         <div class="hub-name">安柯耳洗护商城</div>
         <div class="hub-desc">AI定制 · 12周人体实测有效</div>
-        <div class="hub-domain">shop.airaquas.hair</div>
+        <div class="hub-domain">airaquas.hair/shop</div>
       </a>
     </div>
   </div>
@@ -855,7 +855,7 @@ export const BRAND_HTML = `<!DOCTYPE html>
 <footer>
   <div class="brand-ft">安柯耳 Airaquas</div>
   <div style="color:rgba(232,213,183,.25);font-size:.7rem;letter-spacing:.1em;margin-bottom:.4rem">让美好发生</div>
-  <div class="links"><a href="https://salon.airaquas.hair">城市美发圈</a><a href="https://detect.airaquas.hair">AI检测</a><a href="https://shop.airaquas.hair">产品</a><a href="https://airaquas.hair#community">社区</a></div>
+  <div class="links"><a href="/salon">城市美发圈</a><a href="/detect">AI检测</a><a href="/shop">产品</a><a href="/#community">社区</a></div>
   <div class="copy">&copy; 2026 安柯耳 Airaquas · 让美好发生 &middot; Tony老师在店 &middot; v2.0</div>
 </footer>
 

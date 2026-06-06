@@ -540,7 +540,7 @@ const SALON_HTML = `<!DOCTYPE html>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>城市美发圈 - 安柯耳 Airaquas</title>
 <meta name="description" content="覆盖全国77城10万+合作美发店，AI头皮检测合作沙龙名录。"/>
-<link rel="canonical" href="https://salon.airaquas.hair"/>
+<link rel="canonical" href="https://airaquas.hair/salon"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans SC','PingFang SC','Microsoft YaHei','Hiragino Sans GB',sans-serif;background:#0b0d16;color:#d0d0d8;line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -605,8 +605,8 @@ const SHOP_HTML = `<!DOCTYPE html>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>安柯耳洗护商城 - 科学洗护方案</title>
 <meta name="description" content="AI定制科学洗护方案，控油洗发水、修护发膜、头皮精华液、护发精油。"/>
-<link rel="canonical" href="https://shop.airaquas.hair"/>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://airaquas.hair/#organization","name":"安柯耳 Airaquas","url":"https://airaquas.hair"},{"@type":"WebSite","@id":"https://airaquas.hair/#website","url":"https://airaquas.hair","name":"安柯耳洗护商城","inLanguage":"zh-CN"},{"@type":"Product","@id":"https://shop.airaquas.hair/#product","brand":"安柯耳","offers":[{"@type":"Offer","price":"128","priceCurrency":"CNY","itemOffered":{"name":"控油洗发露"}},{"@type":"Offer","price":"158","priceCurrency":"CNY","itemOffered":{"name":"修护发膜"}},{"@type":"Offer","price":"198","priceCurrency":"CNY","itemOffered":{"name":"头皮精华液"}},{"@type":"Offer","price":"138","priceCurrency":"CNY","itemOffered":{"name":"护发精油"}}]}]}</script>
+<link rel="canonical" href="https://airaquas.hair/shop"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://airaquas.hair/#organization","name":"安柯耳 Airaquas","url":"https://airaquas.hair"},{"@type":"WebSite","@id":"https://airaquas.hair/#website","url":"https://airaquas.hair","name":"安柯耳洗护商城","inLanguage":"zh-CN"},{"@type":"Product","@id":"https://airaquas.hair/shop/#product","brand":"安柯耳","offers":[{"@type":"Offer","price":"128","priceCurrency":"CNY","itemOffered":{"name":"控油洗发露"}},{"@type":"Offer","price":"158","priceCurrency":"CNY","itemOffered":{"name":"修护发膜"}},{"@type":"Offer","price":"198","priceCurrency":"CNY","itemOffered":{"name":"头皮精华液"}},{"@type":"Offer","price":"138","priceCurrency":"CNY","itemOffered":{"name":"护发精油"}}]}]}</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans SC','PingFang SC','Microsoft YaHei','Hiragino Sans GB',sans-serif;background:#0b0d16;color:#d0d0d8;line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -668,75 +668,41 @@ h1{font-size:22px;color:#e8e4dc;font-weight:600;margin-bottom:4px}
 <a class="cta" href="https://airaquas.hair"><h3>先检测 · 再购买</h3><p>AI分析5维度匹配专属方案</p><div class="cta-btn">回到首页 →</div></a>
 </div></body></html>`;
 
-// ═══ SUBDOMAIN ROUTING ═══
-// Check Host header to route subdomains to their dedicated functions
+// ═══ SUBDOMAIN FALLBACK ═══
+// If a subdomain somehow reaches the Worker (DNS setup), route it
+// Otherwise all traffic goes through path routes on the main domain
 app.use('*', async (c, next) => {
-  // Only intercept GET requests at root
   if (c.req.method !== 'GET') return next();
-
   const host = c.req.header('host') || '';
   const subdomain = host.split('.')[0];
-
-  // Skip if main domain or no subdomain
-  if (!subdomain || subdomain === 'airaquas' || host === 'airaquas.hair') {
-    return next();
-  }
-
-  const url = new URL(c.req.url);
-  // Only redirect root of subdomains, not nested paths
-  if (url.pathname !== '/' && url.pathname !== '') return next();
-
-  // Known subdomains → serve dedicated function
-  switch (subdomain) {
-    case 'detect':
-    case '检测':
-      return c.html(DETECT_HTML);
-    case 'fenzhen':
-    case '分诊':
-      return c.redirect('https://airaquas.hair/fenzhen/', 302);
-    case 'guide':
-    case '指南':
-      return c.redirect('https://airaquas.hair/guide/', 302);
-    case 'salon':
-    case 'tony':
-    case '美发':
-      return c.html(SALON_HTML);
-    case 'shop':
-    case '商城':
-      return c.html(SHOP_HTML);
-    default:
-      // Unknown subdomain: redirect to main
-      return c.redirect('https://airaquas.hair/', 302);
-  }
+  if (!subdomain || subdomain === 'airaquas' || host === 'airaquas.hair') return next();
+  // Redirect subdomain visitors to path routes
+  return c.redirect('https://airaquas.hair/', 302);
 });
 
 // Root — serve full-featured old SPA (brand + community + products)
 app.get('/', (c) => c.html(BRAND_HTML));
 
-// Content pages
+// Function pages (path-based — no subdomain needed)
+app.get('/salon', (c) => c.html(SALON_HTML));
+app.get('/salon/', (c) => c.html(SALON_HTML));
+app.get('/shop', (c) => c.html(SHOP_HTML));
+app.get('/shop/', (c) => c.html(SHOP_HTML));
 app.get('/fenzhen', (c) => c.html(fenzhenHtml));
 app.get('/fenzhen/', (c) => c.html(fenzhenHtml));
 app.get('/guide', (c) => c.html(guideHtml));
 app.get('/guide/', (c) => c.html(guideHtml));
-
-// Detect page
 app.get('/detect', (c) => c.html(DETECT_HTML));
 app.get('/detect/', (c) => c.html(DETECT_HTML));
 app.get('/fenzhen/detect', (c) => c.html(DETECT_HTML));
 app.get('/fenzhen/detect/', (c) => c.html(DETECT_HTML));
 
-// Salon pages — city-specific routes (old SPA hardcoded these)
+// Legacy links (old SPA hardcoded)
 app.get('/tony-cities', (c) => c.html(SALON_HTML));
 app.get('/tony-cities/', (c) => c.html(SALON_HTML));
-
-// City salon links (e.g. /sh-salon-tony, /bj-salon-tony)
-// Match any path containing "-salon-tony" — these are in the old SPA
 app.get('/:slug', (c) => {
   const slug = c.req.param('slug');
-  if (slug.endsWith('-salon-tony')) {
-    return c.html(SALON_HTML);
-  }
-  // Unknown path: serve brand SPA
+  if (slug.endsWith('-salon-tony')) return c.html(SALON_HTML);
   return c.html(BRAND_HTML);
 });
 
