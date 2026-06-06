@@ -28,16 +28,6 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: npx wrangler deploy
 
-  deploy-pages:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Deploy old full-featured SPA to Pages
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-        run: |
-          mkdir -p pages-dist
-          cp airaquas-brand.html pages-dist/index.html
-          cp frontend/public/_redirects pages-dist/_redirects 2>/dev/null || true
-          cp -r server/public/data pages-dist/ 2>/dev/null || true
-          npx wrangler pages deploy pages-dist --project-name airaquas-hair
+  # Pages deployment removed: Worker handles ALL routes exclusively.
+  # Previous Pages SPA fallback was intercepting /salon, /shop and
+  # serving brand.html instead of passing through to the Worker.

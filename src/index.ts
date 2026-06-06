@@ -680,31 +680,44 @@ app.use('*', async (c, next) => {
   return c.redirect('https://airaquas.hair/', 302);
 });
 
-// Root — serve full-featured old SPA (brand + community + products)
-app.get('/', (c) => c.html(BRAND_HTML));
+// ═══ CONTENT ROUTING ═══
+// All GET paths handled via middleware to avoid Hono route ordering issues
+app.use('*', async (c, next) => {
+  if (c.req.method !== 'GET') return next();
 
-// Function pages (path-based — no subdomain needed)
-app.get('/salon', (c) => c.html(SALON_HTML));
-app.get('/salon/', (c) => c.html(SALON_HTML));
-app.get('/shop', (c) => c.html(SHOP_HTML));
-app.get('/shop/', (c) => c.html(SHOP_HTML));
-app.get('/fenzhen', (c) => c.html(fenzhenHtml));
-app.get('/fenzhen/', (c) => c.html(fenzhenHtml));
-app.get('/guide', (c) => c.html(guideHtml));
-app.get('/guide/', (c) => c.html(guideHtml));
-app.get('/detect', (c) => c.html(DETECT_HTML));
-app.get('/detect/', (c) => c.html(DETECT_HTML));
-app.get('/fenzhen/detect', (c) => c.html(DETECT_HTML));
-app.get('/fenzhen/detect/', (c) => c.html(DETECT_HTML));
+  const url = new URL(c.req.url);
+  const path = url.pathname.replace(/\/+$/, '');  // normalize trailing slash
 
-// Legacy links (old SPA hardcoded)
-app.get('/tony-cities', (c) => c.html(SALON_HTML));
-app.get('/tony-cities/', (c) => c.html(SALON_HTML));
+  // API routes — passthrough to Hono route handlers
+  if (path.startsWith('/api/') || path.startsWith('/fenzhen/status') || path.startsWith('/fenzhen/poster')) {
+    return next();
+  }
 
-// Catch-all: unmatched paths serve brand SPA
-// IMPORTANT: must be registered LAST so static routes take priority
-// If Hono still routes /salon here, it means the deploy didn't take effect
-app.get('/:slug', (c) => c.html(BRAND_HTML));
+  // Known content paths
+  if (path === '/' || path === '') return c.html(BRAND_HTML);
+  if (path === '/salon' || path === '/tony-cities') return c.html(SALON_HTML);
+  if (path === '/shop') return c.html(SHOP_HTML);
+  if (path === '/fenzhen' || path.startsWith('/fenzhen/')) {
+    if (path === '/fenzhen/detect') return c.html(DETECT_HTML);
+    return c.html(fenzhenHtml);
+  }
+  if (path === '/guide') return c.html(guideHtml);
+  if (path === '/detect') return c.html(DETECT_HTML);
+
+  // Legacy city salon links: /sh-salon-tony, /bj-salon-tony, etc.
+  if (path.endsWith('-salon-tony')) return c.html(SALON_HTML);
+
+  // Everything else → brand SPA
+  return c.html(BRAND_HTML);
+});
+
+// API routes (must be registered AFTER middleware or they won't be hit)
+app.get('/fenzhen/poster', (c) => {
+  const s = c.req.query('s') || '78';
+  const t = c.req.query('t') || 'mixed';
+  return c.json({ code:0, data: { score: s, type: t, msg: 'ok' }});
+});
+app.get('/fenzhen/status', (c) => c.json({ ok: true, version: '3.3' }));
 
 // Email Report API
 app.post('/api/send-report', async (c) => {
@@ -731,19 +744,5 @@ app.post('/api/send-report', async (c) => {
     return c.json({ code: 500, message: '处理失败: ' + e.message }, 500);
   }
 });
-
-// Poster API
-app.get('/fenzhen/poster', (c) => {
-  const s = c.req.query('s') || '78';
-  const t = c.req.query('t') || 'mixed';
-  return c.json({ code:0, data: { score: s, type: t, msg: 'ok' }});
-});
-
-// Status
-app.get('/fenzhen/status', (c) => c.json({ ok: true, version: '3.3' }));
-
-// Fallback: fenzhen pages
-app.get('/fenzhen/:slug', (c) => c.html(fenzhenHtml));
-app.get('/fenzhen/:slug/', (c) => c.html(fenzhenHtml));
 
 export default app;

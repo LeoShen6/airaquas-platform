@@ -1,2 +1,28 @@
-# Worker handles root + all content paths — Pages serves static assets only
-# Static assets and crawling data only
+# Pages is deprecated — Worker handles ALL routes
+# These redirects ensure any existing Pages cache serves the Worker
+/salon/*    https://airaquas.hair/salon    200!
+/shop/*     https://airaquas.hair/shop     200!
+/detect/*   https://airaquas.hair/detect   200!
+/fenzhen/*  https://airaquas.hair/fenzhen  200!
+/guide/*    https://airaquas.hair/guide    200!
+/tony-cities/* https://airaquas.hair/tony-cities 200!
+/szhen-salon-tony https://airaquas.hair/salon 200!
+/bj-salon-tony    https://airaquas.hair/salon 200!
+/gzhu-salon-tony  https://airaquas.hair/salon 200!
+/cd-salon-tony    https://airaquas.hair/salon 200!
+/hz-salon-tony    https://airaquas.hair/salon 200!
+/wh-salon-tony    https://airaquas.hair/salon 200!
+/nj-salon-tony    https://airaquas.hair/salon 200!
+/sh-salon-tony    https://airaquas.hair/salon 200!
+/cq-salon-tony    https://airaquas.hair/salon 200!
+/xa-salon-tony    https://airaquas.hair/salon 200!
+/heb-salon-tony   https://airaquas.hair/salon 200!
+/cz-salon-tony    https://airaquas.hair/salon 200!
+/su-salon-tony    https://airaquas.hair/salon 200!
+/tj-salon-tony    https://airaquas.hair/salon 200!
+/sy-salon-tony    https://airaquas.hair/salon 200!
+/xm-salon-tony    https://airaquas.hair/salon 200!
+/zz-salon-tony    https://airaquas.hair/salon 200!
+/cs-salon-tony    https://airaquas.hair/salon 200!
+# Everything else goes to root
+/*              https://airaquas.hair/      200!
