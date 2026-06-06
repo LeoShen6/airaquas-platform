@@ -21,9 +21,5 @@
   "dependencies": {
     "hono": "^4.12.23",
     "sharp": "^0.34.5"
-  },
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260606.1",
-    "typescript": "5.7"
   }
 }
