@@ -23,27 +23,53 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - name: Diagnose deploy
+
+      - name: 🔍 Diagnose deploy
+        id: diag
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        shell: bash
         run: |
-          set -e
-          echo "::group::Wrangler version"
-          npx --yes wrangler --version 2>&1 || true
-          echo "::endgroup::"
-          echo "::group::Test token (whoami)"
-          npx wrangler whoami 2>&1 || echo "TOKEN_STATUS=fail" >> $GITHUB_ENV
-          echo "::endgroup::"
-          echo "::group::Try deploy (verbose)"
-          npx wrangler deploy --dry-run 2>&1 || echo "BUILD_STATUS=fail" >> $GITHUB_ENV
-          echo "::endgroup::"
-          echo "::group::Actual deploy"
-          npx wrangler deploy 2>&1
+          echo "### ⚙️ Wrangler Deploy Diagnostics" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "**1. Wrangler version**"
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          WVR=$(npx wrangler --version 2>&1)
+          echo "version: $WVR"
+          echo "$WVR" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "**2. Auth check**"
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          AUTH=$(npx wrangler whoami 2>&1)
+          echo "$AUTH" | head -5
+          echo "$AUTH" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "**3. Dry run (build test)**"
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          DRY=$(npx wrangler deploy --dry-run 2>&1)
+          echo "$DRY" | head -10
+          echo "$DRY" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "**4. Actual deploy**"
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          DEP=$(npx wrangler deploy 2>&1)
           EXIT_CODE=$?
-          echo "Exit code: $EXIT_CODE"
-          echo "DEPLOY_STATUS=$EXIT_CODE" >> $GITHUB_ENV
-          echo "::endgroup::"
-        continue-on-error: true
+          echo "$DEP"
+          echo "$DEP" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Exit code: $EXIT_CODE" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "**Exit code:** $EXIT_CODE" >> $GITHUB_STEP_SUMMARY
+          exit 0
 
   # Pages deployment removed: Worker handles ALL routes exclusively.
   # Previous Pages SPA fallback was intercepting /salon, /shop and
