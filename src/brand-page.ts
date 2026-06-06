@@ -691,22 +691,6 @@ export const BRAND_HTML = `<!DOCTYPE html>
     <div class="fade-up"><p class="section-sub">覆盖全国主要城市的美发店信息平台，点击城市查看完整列表</p></div>
     <div class="fade-up">
       <div class="network-bar" id="cityBar"><div class="network-emblem"><a href="/szhen-salon-tony"><span class="dot" style="background:#e74c3c"></span><span class="name">深圳</span><span class="count">1524</span></a></div><div class="network-emblem"><a href="/cd-salon-tony"><span class="dot" style="background:#2ecc71"></span><span class="name">成都</span><span class="count">4020</span></a></div><div class="network-emblem"><a href="/bj-salon-tony"><span class="dot" style="background:#3498db"></span><span class="name">北京</span><span class="count">2193</span></a></div><div class="network-emblem"><a href="/wh-salon-tony"><span class="dot" style="background:#1abc9c"></span><span class="name">武汉</span><span class="count">2899</span></a></div><div class="network-emblem"><a href="/nj-salon-tony"><span class="dot" style="background:#9b59b6"></span><span class="name">南京</span><span class="count">2323</span></a></div><div class="network-emblem"><a href="/gzhu-salon-tony"><span class="dot" style="background:#f39c12"></span><span class="name">广州</span><span class="count">1955</span></a></div><div class="network-emblem"><a href="/hz-salon-tony"><span class="dot" style="background:#e67e22"></span><span class="name">杭州</span><span class="count">2777</span></a></div><div class="network-emblem"><a href="/sh-salon-tony"><span class="dot" style="background:#1dd1a1"></span><span class="name">上海</span><span class="count">2184</span></a></div><div class="network-emblem"><a href="/cq-salon-tony"><span class="dot" style="background:#0984e3"></span><span class="name">重庆</span><span class="count">3060</span></a></div><div class="network-emblem"><a href="/heb-salon-tony"><span class="dot" style="background:#d63031"></span><span class="name">哈尔滨</span><span class="count">2112</span></a></div><div class="network-emblem"><a href="/xa-salon-tony"><span class="dot" style="background:#00b894"></span><span class="name">西安</span><span class="count">2069</span></a></div></div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-
   </div>
 </section>
 

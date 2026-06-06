@@ -13,6 +13,9 @@ interface Env {
   R2: R2Bucket;
   KV: KVNamespace;
   AI: Ai;
+  // AI Provider config (set in wrangler.toml [vars] + secrets)
+  AI_PROVIDER?: string;         // "dashscope" (default) | "workers-ai"
+  DASHSCOPE_API_KEY?: string;   // AliYun Bailian API key
 }
 
 type Bindings = Env;

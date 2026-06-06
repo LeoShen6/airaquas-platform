@@ -291,8 +291,8 @@ export async function handleDetect(request: Request, env: Env): Promise<Response
 
   const result = computeResult(aiResult, imageKey);
 
-  // KV 缓存 (60s)
-  await env.KV.put(`detect:${hash}`, JSON.stringify(result), { expirationTtl: 60 }).catch(() => {});
+  // KV 缓存 (5min — 重复图片免走 AI 全链路)
+  await env.KV.put(`detect:${hash}`, JSON.stringify(result), { expirationTtl: 300 }).catch(() => {});
 
   // D1 存储（含 provider 字段追踪来源）
   await env.DB.prepare(

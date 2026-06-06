@@ -20,12 +20,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
       - name: Deploy Worker (airaquas-platform)
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-        run: |
-          npm install hono
-          npx wrangler deploy
+        run: npx wrangler deploy
 
   deploy-pages:
     runs-on: ubuntu-latest

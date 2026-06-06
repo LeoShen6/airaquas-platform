@@ -2,9 +2,13 @@
   "name": "airaquas-platform",
   "version": "1.0.0",
   "description": "安柯耳（Airaquas）AI 毛发健康管理服务平台。",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:pages": "mkdir -p pages-dist && cp airaquas-brand.html pages-dist/index.html && wrangler pages deploy pages-dist --project-name airaquas-hair",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "type-check": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -17,5 +21,9 @@
   "dependencies": {
     "hono": "^4.12.23",
     "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260606.1",
+    "typescript": "5.7"
   }
 }
