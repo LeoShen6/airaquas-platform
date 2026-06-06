@@ -700,11 +700,11 @@ app.get('/fenzhen/detect/', (c) => c.html(DETECT_HTML));
 // Legacy links (old SPA hardcoded)
 app.get('/tony-cities', (c) => c.html(SALON_HTML));
 app.get('/tony-cities/', (c) => c.html(SALON_HTML));
-app.get('/:slug', (c) => {
-  const slug = c.req.param('slug');
-  if (slug.endsWith('-salon-tony')) return c.html(SALON_HTML);
-  return c.html(BRAND_HTML);
-});
+
+// Catch-all: unmatched paths serve brand SPA
+// IMPORTANT: must be registered LAST so static routes take priority
+// If Hono still routes /salon here, it means the deploy didn't take effect
+app.get('/:slug', (c) => c.html(BRAND_HTML));
 
 // Email Report API
 app.post('/api/send-report', async (c) => {
