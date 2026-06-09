@@ -27,4 +27,4 @@ jobs:
         run: |
           # Prepare pages-dist: _worker.js + index.html + frontend static assets
           cp airaquas-brand.html pages-dist/index.html
-          npx wrangler pages deploy pages-dist --project-name airaquas-hair --branch=prod
+          npx wrangler pages deploy pages-dist --project-name airaquas-hair
