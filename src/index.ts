@@ -7,6 +7,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { handleDetect, handleDetectHistory } from './detect-service';
 import { BRAND_HTML } from './brand-page';
+import { generateCityPage } from './salon-pages';
 
 interface Env {
   DB: D1Database;
@@ -19,6 +20,7 @@ interface Env {
 }
 
 type Bindings = Env;
+const START_TIME = Date.now();
 
 const app = new Hono<{ Bindings: Bindings }>();
 app.use('/*', cors());
@@ -132,8 +134,22 @@ const detectExtra = [
 ];
 
 // ===== CONTENT PAGES =====
-const fenzhenHtml = page('四型分诊图鉴 - 安柯耳 Airaquas', 'AI时代头皮健康媒体，分型检测、护理引导、知识科普。', '/fenzhen/', fenzhenExtra);
-const guideHtml = page('头皮健康指南 - 安柯耳 Airaquas', '四步护理流程详解、常见问题解答。', '/guide/', guideExtra);
+const fenzhenBody = `
+<div class="card"><span class="tag">🩺 分型自测</span><h3>四种脱发类型快速判断</h3><p>① <strong>休止期脱发</strong>（90%可6月自愈）— 日掉发>150根持续2周<br/>② <strong>模式性脱发</strong>（DHT驱动，男性21.3%）— 发际线后退/头顶稀疏<br/>③ <strong>瘢痕性脱发</strong>（不可逆）— 头皮有瘢痕/红斑<br/>④ <strong>暂时性脱发</strong>（可恢复）— 压力/营养/药物引起</p></div>
+<div class="card"><span class="tag">🔬 核心指标</span><h3>头皮健康关键数据</h3><p>中国人均10万毛囊，每天产能30米头发。82.5%国人头皮亚健康，建议每3-6个月AI筛查。</p></div>
+<div class="card"><span class="tag">📊 流行病学</span><h3>中国脱发现状</h3><p>男性AGA患病率21.3%/女性6.0%（中华医学会2023），脱发人口超2.5亿。20-35岁年轻人占脱发人群63.1%。</p></div>
+<div class="card"><span class="tag">🧬 前沿研究</span><h3>最新突破</h3><p>KCNJ2钾通道调控Wnt毛囊再生（Cell 2025）、冷等离子体+IL-2凝胶使毛囊新生提升116.8%（Adv Sci 2026）。</p></div>
+<div class="highlight">💡 超60%的人购买防脱产品前没有判断过脱发类型。先分型，再干预。</div>
+`;
+const guideBody = `
+<div class="card"><span class="tag">🧴 日常流程</span><h3>四步护理法</h3><p><strong>Step 1 温和预洗</strong> — 氨基酸洗发露指腹按摩头皮1-2分钟<br/><strong>Step 2 发丝深护</strong> — 修护发膜涂抹发中至发梢，停留3-5分钟<br/><strong>Step 3 头皮调理</strong> — 头皮精华液滴在分线处打圈按摩<br/><strong>Step 4 抚平亮泽</strong> — 1-2滴护发精油搓开涂抹发梢</p></div>
+<div class="card"><span class="tag">📏 频率建议</span><h3>科学洗护节奏</h3><p>油性头皮每2-3天洗一次，逐步拉长间隔训练头皮适应。干性头皮每周1-2次。头皮精华建议每天使用，4周见效。</p></div>
+<div class="card"><span class="tag">⚠️ 常见误区</span><h3>这些坑不要踩</h3><p>• 护发素不要涂在头皮上，只涂发中尾<br/>• 水温控制37-38℃，指尖按摩不是指甲抓<br/>• 不要频繁更换洗护产品，给头皮适应期</p></div>
+<div class="card"><span class="tag">📋 产品搭配</span><h3>根据发质选品</h3><p><strong>油性</strong> → 控油洗发露 + 护发精油<br/><strong>干性/受损</strong> → 修护发膜 + 护发精油<br/><strong>敏感</strong> → 头皮精华液 + 氨基酸洗发露</p></div>
+<div class="highlight">📊 240例双盲实测：安柯耳组合12周使油脂分泌-47.2%，发丝断裂率-59.5%，致敏率<0.8%</div>
+`;
+const fenzhenHtml = page('四型分诊图鉴 - 安柯耳 Airaquas', 'AI时代头皮健康媒体，分型检测、护理引导、知识科普。', '/fenzhen/', fenzhenExtra, fenzhenBody);
+const guideHtml = page('头皮健康指南 - 安柯耳 Airaquas', '四步护理流程详解、常见问题解答。', '/guide/', guideExtra, guideBody);
 
 // ===== DETECT PAGE (complete static HTML with interactive UI) =====
 const DETECT_HTML = `<!DOCTYPE html>
@@ -521,9 +537,28 @@ if (!localStorage.getItem('airaquas_session')) {
 </body>
 </html>`;// ===== ROUTES =====
 
+// ===== Health Check =====
+app.get('/api/health', (c) => c.json({
+  ok: true,
+  version: '3.4.0',
+  timestamp: new Date().toISOString(),
+  uptime: Math.floor((Date.now() - START_TIME) / 1000),
+  env: {
+    ai_provider: c.env.AI_PROVIDER || 'workers-ai',
+    dashscope_key_set: !!c.env.DASHSCOPE_API_KEY,
+  },
+}));
+
 // ===== AI Detection API =====
 app.post('/api/detect', async (c) => handleDetect(c.req.raw, c.env as Env));
-app.get('/api/detect/history', async (c) => handleDetectHistory(c.req.raw, c.env as Env));
+app.get('/api/detect/history', async (c) => {
+  try {
+    return await handleDetectHistory(c.req.raw, c.env as Env);
+  } catch (e: any) {
+    console.error('[detect/history] Error:', e.message);
+    return c.json({ code: 500, message: '查询检测历史失败', detail: e.message }, 500);
+  }
+});
 app.get('/api/detect/:id', async (c) => {
   const { id } = c.req.param();
   const result = await c.env.DB.prepare(
@@ -698,10 +733,18 @@ app.get('/tony-cities/', (c) => c.html(SALON_HTML));
 app.get('/:slug', (c) => {
   const slug = c.req.param('slug');
   // Check if this looks like a legacy city-salon link
-  if (slug.endsWith('-salon-tony')) return c.html(SALON_HTML);
+  if (slug.endsWith('-salon-tony')) {
+    const cityPage = generateCityPage(slug);
+    if (cityPage) return c.html(cityPage);
+    // Fallback: unknown city slug → show list
+    return c.html(SALON_HTML);
+  }
   // Everything else → brand SPA
   return c.html(BRAND_HTML);
 });
+
+// GET endpoint — return endpoint info (lets clients verify the endpoint exists)
+app.get('/api/send-report', (c) => c.json({ code: 0, message: '请使用 POST 方法提交报告', docs: 'POST with JSON: { email, pdfBase64 }' }));
 
 // API routes
 app.get('/fenzhen/poster', (c) => {
@@ -709,9 +752,9 @@ app.get('/fenzhen/poster', (c) => {
   const t = c.req.query('t') || 'mixed';
   return c.json({ code:0, data: { score: s, type: t, msg: 'ok' }});
 });
-app.get('/fenzhen/status', (c) => c.json({ ok: true, version: '3.3' }));
+app.get('/fenzhen/status', (c) => c.json({ ok: true, version: '3.4.0' }));
 
-// Email Report API
+// Email Report API — accept POST with JSON body
 app.post('/api/send-report', async (c) => {
   try {
     const { email, pdfBase64 } = await c.req.json();

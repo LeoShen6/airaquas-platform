@@ -319,29 +319,46 @@ export async function handleDetectHistory(request: Request, env: Env): Promise<R
   const limit = Math.min(50, parseInt(url.searchParams.get('limit') || '10'));
   const offset = parseInt(url.searchParams.get('offset') || '0');
 
-  let query = `SELECT id, score, hair_type, dimensions, findings, tips, products, confidence, provider, created_at FROM detections WHERE 1=1`;
-  const params: any[] = [];
-  if (sessionId) { query += ' AND session_id = ?'; params.push(sessionId); }
-  if (userId) { query += ' AND user_id = ?'; params.push(userId); }
-  query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
-  params.push(limit, offset);
+  try {
+    let query = 'SELECT id, score, hair_type, dimensions, findings, tips, products, confidence, provider, created_at FROM detections WHERE 1=1';
+    const params: any[] = [];
+    if (sessionId) { query += ' AND session_id = ?'; params.push(sessionId); }
+    if (userId) { query += ' AND user_id = ?'; params.push(userId); }
+    query += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+    params.push(limit, offset);
 
-  const result = await env.DB.prepare(query).bind(...params).all();
-  const total = await env.DB.prepare(
-    `SELECT COUNT(*) as count FROM detections WHERE ${sessionId ? 'session_id = ?' : '1=1'}`
-  ).bind(...(sessionId ? [sessionId] : [])).first();
+    const result = await env.DB.prepare(query).bind(...params).all();
+    
+    // Count query — handle both with/without filters
+    let countQuery = 'SELECT COUNT(*) as count FROM detections';
+    const countParams: any[] = [];
+    const conditions: string[] = [];
+    if (sessionId) { conditions.push('session_id = ?'); countParams.push(sessionId); }
+    if (userId) { conditions.push('user_id = ?'); countParams.push(userId); }
+    if (conditions.length) countQuery += ' WHERE ' + conditions.join(' AND ');
+    
+    const total = await env.DB.prepare(countQuery).bind(...countParams).first();
 
-  return Response.json({
-    code: 0,
-    data: {
-      items: result.results.map((r: any) => ({
-        ...r,
-        dimensions: JSON.parse(r.dimensions || '[]'),
-        findings: JSON.parse(r.findings || '[]'),
-        tips: JSON.parse(r.tips || '[]'),
-        products: JSON.parse(r.products || '[]'),
-      })),
-      total: (total as any)?.count || 0, limit, offset,
-    },
-  });
+    return Response.json({
+      code: 0,
+      data: {
+        items: result.results.map((r: any) => ({
+          ...r,
+          dimensions: JSON.parse(r.dimensions || '[]'),
+          findings: JSON.parse(r.findings || '[]'),
+          tips: JSON.parse(r.tips || '[]'),
+          products: JSON.parse(r.products || '[]'),
+        })),
+        total: (total as any)?.count || 0, limit, offset,
+      },
+    });
+  } catch (e: any) {
+    console.error('[detect/history] DB error:', e.message);
+    // Table might not exist yet — return empty results gracefully
+    return Response.json({
+      code: 0,
+      data: { items: [], total: 0, limit, offset },
+      warning: '检测历史暂不可用：' + e.message,
+    });
+  }
 }
