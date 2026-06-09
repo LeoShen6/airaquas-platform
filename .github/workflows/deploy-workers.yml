@@ -2,19 +2,9 @@ name: Deploy
 on:
   push:
     branches: [main]
-    paths:
-      - 'src/**'
-      - 'wrangler.toml'
-      - 'package.json'
-      - '.github/**'
-      - 'airaquas-brand.html'
-      - 'frontend/public/**'
-      - 'frontend/**'
-      - 'server/public/**'
-      - 'pages-dist/**'
 
 jobs:
-  deploy-worker:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,64 +12,19 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
+
       - name: Install dependencies
         run: npm ci
 
-      - name: 🔍 Diagnose deploy
-        id: diag
+      - name: Deploy Worker (API + non-Pages routes)
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-        shell: bash
+        run: npx wrangler deploy
+
+      - name: Deploy Pages (_worker.js handles city pages + static assets)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: |
-          echo "### ⚙️ Wrangler Deploy Diagnostics" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          echo "**1. Wrangler version**"
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          WVR=$(npx wrangler --version 2>&1)
-          echo "version: $WVR"
-          echo "$WVR" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          echo "**2. Auth check**"
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          AUTH=$(npx wrangler whoami 2>&1)
-          echo "$AUTH" | head -5
-          echo "$AUTH" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          echo "**3. Dry run (build test)**"
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          DRY=$(npx wrangler deploy --dry-run 2>&1)
-          echo "$DRY" | head -10
-          echo "$DRY" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          echo "**4. Actual deploy**"
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          DEP=$(npx wrangler deploy 2>&1)
-          EXIT_CODE=$?
-          echo "$DEP"
-          echo "$DEP" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Exit code: $EXIT_CODE" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-
-          echo "**Exit code:** $EXIT_CODE" >> $GITHUB_STEP_SUMMARY
-          exit 0
-
-  # Reset Cloudflare Pages static assets — deploy a _routes.json that
-  # excludes all paths from Pages routing so the Worker handles everything.
-  # This clears the old SPA fallback that was intercepting routes.
-  reset-pages:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Deploy Pages routing config only
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-        run: npx wrangler pages deploy pages-dist --project-name airaquas-hair --branch=prod
+          # Prepare pages-dist: _worker.js + index.html + frontend static assets
+          cp airaquas-brand.html pages-dist/index.html
+          npx wrangler pages deploy pages-dist --project-name airaquas-hair --branch=prod
