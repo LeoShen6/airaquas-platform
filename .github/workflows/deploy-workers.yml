@@ -11,6 +11,7 @@ on:
       - 'frontend/public/**'
       - 'frontend/**'
       - 'server/public/**'
+      - 'pages-dist/**'
 
 jobs:
   deploy-worker:
@@ -71,6 +72,14 @@ jobs:
           echo "**Exit code:** $EXIT_CODE" >> $GITHUB_STEP_SUMMARY
           exit 0
 
-  # Pages deployment removed: Worker handles ALL routes exclusively.
-  # Previous Pages SPA fallback was intercepting /salon, /shop and
-  # serving brand.html instead of passing through to the Worker.
+  # Reset Cloudflare Pages static assets — deploy a _routes.json that
+  # excludes all paths from Pages routing so the Worker handles everything.
+  # This clears the old SPA fallback that was intercepting routes.
+  reset-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy Pages routing config only
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: npx wrangler pages deploy pages-dist --project-name airaquas-hair --branch=prod
