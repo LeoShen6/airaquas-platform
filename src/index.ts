@@ -607,27 +607,27 @@ h1{font-size:22px;color:#e8e4dc;font-weight:600;margin-bottom:4px}
 <p class="sub">覆盖全国 77 个城市 · 100,000+ 家合作美发店</p>
 
 <div class="grp"><div class="grp-title">📍 重点城市</div><div class="city-wrap">
-<a href="/sh-salon-tony" class="city"><span class="cname">上海</span><span class="ccount">2184</span></a>
-<a href="/bj-salon-tony" class="city"><span class="cname">北京</span><span class="ccount">2193</span></a>
-<a href="/gzhu-salon-tony" class="city"><span class="cname">广州</span><span class="ccount">1955</span></a>
-<a href="/szhen-salon-tony" class="city"><span class="cname">深圳</span><span class="ccount">1524</span></a>
-<a href="/cd-salon-tony" class="city"><span class="cname">成都</span><span class="ccount">4020</span></a>
-<a href="/hz-salon-tony" class="city"><span class="cname">杭州</span><span class="ccount">2777</span></a>
-<a href="/wh-salon-tony" class="city"><span class="cname">武汉</span><span class="ccount">2899</span></a>
-<a href="/nj-salon-tony" class="city"><span class="cname">南京</span><span class="ccount">2323</span></a>
-<a href="/cq-salon-tony" class="city"><span class="cname">重庆</span><span class="ccount">3060</span></a>
-<a href="/xa-salon-tony" class="city"><span class="cname">西安</span><span class="ccount">2069</span></a>
-<a href="/heb-salon-tony" class="city"><span class="cname">哈尔滨</span><span class="ccount">2112</span></a>
+<a href="/tony/sh-salon-tony" class="city"><span class="cname">上海</span><span class="ccount">2184</span></a>
+<a href="/tony/bj-salon-tony" class="city"><span class="cname">北京</span><span class="ccount">2193</span></a>
+<a href="/tony/gzhu-salon-tony" class="city"><span class="cname">广州</span><span class="ccount">1955</span></a>
+<a href="/tony/szhen-salon-tony" class="city"><span class="cname">深圳</span><span class="ccount">1524</span></a>
+<a href="/tony/cd-salon-tony" class="city"><span class="cname">成都</span><span class="ccount">4020</span></a>
+<a href="/tony/hz-salon-tony" class="city"><span class="cname">杭州</span><span class="ccount">2777</span></a>
+<a href="/tony/wh-salon-tony" class="city"><span class="cname">武汉</span><span class="ccount">2899</span></a>
+<a href="/tony/nj-salon-tony" class="city"><span class="cname">南京</span><span class="ccount">2323</span></a>
+<a href="/tony/cq-salon-tony" class="city"><span class="cname">重庆</span><span class="ccount">3060</span></a>
+<a href="/tony/xa-salon-tony" class="city"><span class="cname">西安</span><span class="ccount">2069</span></a>
+<a href="/tony/heb-salon-tony" class="city"><span class="cname">哈尔滨</span><span class="ccount">2112</span></a>
 </div></div>
 
 <div class="grp"><div class="grp-title">📍 更多城市</div><div class="city-wrap">
-<a href="/cz-salon-tony" class="city"><span class="cname">常州</span><span class="ccount">912</span></a>
-<a href="/su-salon-tony" class="city"><span class="cname">苏州</span><span class="ccount">1687</span></a>
-<a href="/tj-salon-tony" class="city"><span class="cname">天津</span><span class="ccount">1342</span></a>
-<a href="/sy-salon-tony" class="city"><span class="cname">沈阳</span><span class="ccount">1098</span></a>
-<a href="/xm-salon-tony" class="city"><span class="cname">厦门</span><span class="ccount">856</span></a>
-<a href="/zz-salon-tony" class="city"><span class="cname">郑州</span><span class="ccount">1456</span></a>
-<a href="/cs-salon-tony" class="city"><span class="cname">长沙</span><span class="ccount">1234</span></a>
+<a href="/tony/cz-salon-tony" class="city"><span class="cname">常州</span><span class="ccount">912</span></a>
+<a href="/tony/su-salon-tony" class="city"><span class="cname">苏州</span><span class="ccount">1687</span></a>
+<a href="/tony/tj-salon-tony" class="city"><span class="cname">天津</span><span class="ccount">1342</span></a>
+<a href="/tony/sy-salon-tony" class="city"><span class="cname">沈阳</span><span class="ccount">1098</span></a>
+<a href="/tony/xm-salon-tony" class="city"><span class="cname">厦门</span><span class="ccount">856</span></a>
+<a href="/tony/zz-salon-tony" class="city"><span class="cname">郑州</span><span class="ccount">1456</span></a>
+<a href="/tony/cs-salon-tony" class="city"><span class="cname">长沙</span><span class="ccount">1234</span></a>
 </div></div>
 
 <a class="cta" href="https://airaquas.hair"><h3>AI 头皮检测 · 合作沙龙专属</h3><p>Tony 老师已入驻城市美发圈</p><div class="cta-btn">回到首页 →</div></a>
@@ -728,15 +728,25 @@ app.get('/detect/', (c) => c.html(DETECT_HTML));
 app.get('/tony-cities', (c) => c.html(SALON_HTML));
 app.get('/tony-cities/', (c) => c.html(SALON_HTML));
 
-// Legacy city salon links: match /xxx-salon-tony pattern
-// These are hardcoded in the old SPA (sh-salon-tony, bj-salon-tony, etc.)
-app.get('/:slug', (c) => {
+// New city salon URL pattern: /tony/sh-salon-tony etc.
+// (avoids Cloudflare Pages static file interception for old /xx-salon-tony paths)
+app.get('/tony/:slug', (c) => {
   const slug = c.req.param('slug');
-  // Check if this looks like a legacy city-salon link
   if (slug.endsWith('-salon-tony')) {
     const cityPage = generateCityPage(slug);
     if (cityPage) return c.html(cityPage);
-    // Fallback: unknown city slug → show list
+  }
+  return c.html(SALON_HTML);
+});
+
+// Legacy fallback: match /xxx-salon-tony pattern
+// These old URLs were deployed as Cloudflare Pages static files — the Worker
+// only receives them AFTER Pages static assets are cleaned up.
+app.get('/:slug', (c) => {
+  const slug = c.req.param('slug');
+  if (slug.endsWith('-salon-tony')) {
+    const cityPage = generateCityPage(slug);
+    if (cityPage) return c.html(cityPage);
     return c.html(SALON_HTML);
   }
   // Everything else → brand SPA
