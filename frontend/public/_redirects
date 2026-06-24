@@ -1,5 +1,7 @@
-# Pages is deprecated — Worker handles ALL routes
-# These redirects ensure any existing Pages cache serves the Worker
+# Redirect poster to Worker (can't add Dashboard route with current token)
+/poster     https://airaquas-platform.jfh-099.workers.dev/poster    301
+/poster/*   https://airaquas-platform.jfh-099.workers.dev/poster    301
+# Proxy other paths to Worker (Dashboard routes exist for these)
 /salon/*    https://airaquas.hair/salon    200!
 /shop/*     https://airaquas.hair/shop     200!
 /detect/*   https://airaquas.hair/detect   200!
@@ -24,5 +26,5 @@
 /xm-salon-tony    https://airaquas.hair/salon 200!
 /zz-salon-tony    https://airaquas.hair/salon 200!
 /cs-salon-tony    https://airaquas.hair/salon 200!
-# Everything else goes to root
+# Everything else → brand SPA
 /*              https://airaquas.hair/      200!
