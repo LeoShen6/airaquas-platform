@@ -480,6 +480,19 @@ app.get('/salon/:slug', (c) => {
   return c.redirect('/salon', 302);
 });
 
+// ═══ City salon data endpoint (from R2) ═══
+app.get('/salon/data/:file', async (c) => {
+  const file = c.req.param('file');
+  try {
+    const obj = await c.env.R2.get('salon-data/' + file);
+    if (obj) {
+      const text = await obj.text();
+      return c.json(JSON.parse(text));
+    }
+  } catch (_) {}
+  return c.json({ error: 'no data', file }, 404);
+});
+
 // ═══ Backward compat: /tony/:slug → /salon/:slug ═══
 app.get('/tony/:slug', (c) => {
   const slug = c.req.param('slug');

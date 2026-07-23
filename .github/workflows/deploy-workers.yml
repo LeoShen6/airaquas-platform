@@ -16,6 +16,31 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Upload city data to R2
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: |
+          python3 -c "
+import json, os, sys
+with open('pages-dist/data/city_data.json') as f:
+    data = json.load(f)
+os.makedirs('_data', exist_ok=True)
+import hashlib
+slug_hash = hashlib.md5(('key').encode()).hexdigest()[:8]
+city_to_slug = {t['name']: t['slug'] for t in [
+    {'name':'天津','slug':'tj'},{'name':'重庆','slug':'cq'},{'name':'杭州','slug':'hz'},{'name':'成都','slug':'cd'},
+    {'name':'武汉','slug':'wh'},{'name':'南京','slug':'nj'},{'name':'西安','slug':'xa'},{'name':'长沙','slug':'cs'},
+    {'name':'郑州','slug':'zz'},{'name':'沈阳','slug':'sy'}]}
+for city_name, shops in data['data'].items():
+    slug = city_to_slug.get(city_name, '')
+    if not slug: continue
+    fpath = f'_data/{slug}-salon-tony.json'
+    with open(fpath, 'w', encoding='utf-8') as f:
+        json.dump(shops, f, ensure_ascii=False)
+    os.system(f'npx wrangler r2 object put airaquas-hair/salon-data/{slug}-salon-tony.json --file={fpath} --ct application/json')
+    print(f'Uploaded {slug}: {len(shops)} shops')
+"
+
       - name: Deploy Worker (API + non-Pages routes)
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}

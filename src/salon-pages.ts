@@ -447,6 +447,21 @@ h1{font-size:26px;color:#e8e4dc;font-weight:700;margin:0}
 .d-card:hover{background:rgba(255,255,255,.04);border-color:rgba(123,193,255,.1)}
 .d-name{font-size:13px;color:#d0d0d8}
 .d-count{font-size:13px;font-weight:600;color:#7bc1ff}
+/* Shop list */
+.shop-card{display:flex;gap:10px;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);margin-bottom:8px;transition:.2s;align-items:center}
+.shop-card:hover{border-color:rgba(123,193,255,.12);transform:translateY(-1px)}
+.shop-idx{width:22px;height:22px;min-width:22px;border-radius:6px;background:rgba(123,193,255,.08);color:#7bc1ff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.shop-body{flex:1;min-width:0}
+.shop-name{font-size:14px;font-weight:600;color:#e8e4dc;line-height:1.4;margin-bottom:3px}
+.shop-badge{display:inline-block;font-size:9px;padding:1px 6px;border-radius:3px;background:rgba(123,193,255,.06);color:#7bc1ff;margin-left:6px;vertical-align:middle}
+.shop-addr{font-size:11px;color:rgba(255,255,255,.35);line-height:1.4;margin-bottom:4px}
+.shop-actions{display:flex;gap:6px;flex-wrap:wrap}
+.shop-tel{display:inline-flex;align-items:center;gap:3px;padding:4px 10px;border-radius:5px;font-size:11px;background:rgba(123,193,255,.06);color:#7bc1ff;text-decoration:none;transition:.2s}
+.shop-tel:hover{background:rgba(123,193,255,.12)}
+.shop-map{display:inline-flex;align-items:center;gap:3px;padding:4px 10px;border-radius:5px;font-size:11px;background:rgba(255,255,255,.03);color:rgba(255,255,255,.35);text-decoration:none;transition:.2s}
+.shop-map:hover{background:rgba(255,255,255,.06)}
+.loading{text-align:center;padding:24px;color:rgba(255,255,255,.25);font-size:13px}
+.no-data{text-align:center;padding:32px;color:rgba(255,255,255,.25);font-size:13px;border:1px dashed rgba(255,255,255,.04);border-radius:10px}
 .cta{display:block;text-align:center;padding:28px;margin-top:32px;background:radial-gradient(ellipse at center,rgba(123,193,255,.04),transparent 70%);border-radius:16px;text-decoration:none}
 .cta h3{color:#e8e4dc;font-size:15px;margin-bottom:6px}
 .cta p{color:rgba(255,255,255,.3);font-size:12px}
@@ -475,6 +490,22 @@ h1{font-size:26px;color:#e8e4dc;font-weight:700;margin:0}
 <div class="d-grid">
 ${districtCards}
 </div>
+<div class="section-title" style="margin-top:20px">🏪 门店列表</div>
+<div id="shopList"><div class="loading">加载门店数据...</div></div>
+<script>
+(function(){
+var slug='${slug}';
+fetch('/salon/data/'+slug+'.json')
+.then(function(r){if(!r.ok)throw Error();return r.json()})
+.then(function(shops){
+  var el=document.getElementById('shopList');
+  el.innerHTML=shops.map(function(s,i){
+    return '<div class="shop-card"><div class="shop-idx">'+(i+1)+'</div><div class="shop-body"><div class="shop-name">'+s.name+'<span class="shop-badge">美发</span></div><div class="shop-addr">'+(s.address||'')+'</div><div class="shop-actions">'+(s.tel?'<a class="shop-tel" href="tel:'+s.tel+'">'+s.tel+'</a>':'')+'<a class="shop-map" href="https://uri.amap.com/search?keyword='+encodeURIComponent(s.name)+'&city='+encodeURIComponent(s.cityname||'')+'" target="_blank">地图</a></div></div></div>';
+  }).join('')||'<div class="no-data">暂无门店数据</div>';
+})
+.catch(function(){document.getElementById('shopList').innerHTML='<div class="no-data">门店数据待更新</div>'});
+})();
+</script>
 <a class="cta" href="/detect"><h3>AI头皮检测 · 合作沙龙专属</h3><p>先检测再选店，科学护理更有效</p><div class="cta-btn">开始AI检测 &rarr;</div></a>
 </div></body></html>`;
 }
