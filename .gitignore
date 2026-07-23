@@ -1,3 +1,5 @@
 server/public/data
 pages-dist/index.html
 pages-dist/_routes.json
+_data/
+node_modules/

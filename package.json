@@ -8,7 +8,8 @@
     "deploy": "wrangler deploy",
     "deploy:pages": "mkdir -p pages-dist && cp airaquas-brand.html pages-dist/index.html && wrangler pages deploy pages-dist --project-name airaquas-hair",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "upload-r2-data": "python3 scripts/upload_r2_data.py"
   },
   "repository": {
     "type": "git",

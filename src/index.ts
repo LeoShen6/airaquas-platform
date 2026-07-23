@@ -480,9 +480,12 @@ app.get('/salon/:slug', (c) => {
   return c.redirect('/salon', 302);
 });
 
-// ═══ City salon data endpoint (from R2) ═══
+// ═══ City salon data endpoint ═══
 app.get('/salon/data/:file', async (c) => {
   const file = c.req.param('file');
+  const slug = file.replace('.json', '');
+
+  // Try R2 first (for future use when CI/CD uploads there)
   try {
     const obj = await c.env.R2.get('salon-data/' + file);
     if (obj) {
@@ -490,6 +493,24 @@ app.get('/salon/data/:file', async (c) => {
       return c.json(JSON.parse(text));
     }
   } catch (_) {}
+
+  // Fallback: read from Pages-deployed city_data.json
+  try {
+    const resp = await fetch('https://airaquas-hair.pages.dev/data/city_data.json');
+    if (!resp.ok) throw new Error('fetch failed');
+    const all = await resp.json();
+    const citySlugMap: Record<string, string> = {
+      '天津':'tj','重庆':'cq','杭州':'hz','成都':'cd','武汉':'wh',
+      '南京':'nj','西安':'xa','长沙':'cs','郑州':'zz','沈阳':'sy'
+    };
+    const rev: Record<string, string> = {};
+    for (const [name, s] of Object.entries(citySlugMap)) rev[s] = name;
+    const cityName = rev[slug];
+    if (cityName && all.data && all.data[cityName]) {
+      return c.json(all.data[cityName]);
+    }
+  } catch (_) {}
+
   return c.json({ error: 'no data', file }, 404);
 });
 
