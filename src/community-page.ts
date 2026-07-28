@@ -58,6 +58,15 @@ export function generateCommunityPage(): string {
 .radio-card h4{font-size:14px;font-weight:600;color:#e8e4dc;margin-bottom:4px}
 .radio-card p{font-size:11px;color:rgba(255,255,255,0.3)}
 
+/* ═══ Wiki Link Banner ═══ */
+.wiki-banner{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 28px;border-radius:14px;background:linear-gradient(135deg,rgba(200,169,110,0.08),rgba(200,169,110,0.03));border:1px solid rgba(200,169,110,0.1);margin-top:48px;flex-wrap:wrap}
+.wiki-banner-left{display:flex;align-items:center;gap:14px}
+.wiki-banner-icon{width:40px;height:40px;border-radius:10px;background:rgba(200,169,110,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.wiki-banner h4{font-size:14px;font-weight:600;color:#e8e4dc;margin-bottom:2px}
+.wiki-banner p{font-size:12px;color:rgba(255,255,255,0.35)}
+.wiki-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:10px;font-size:12px;font-weight:600;background:rgba(200,169,110,0.12);color:#c8a96e;text-decoration:none;transition:all 0.3s;white-space:nowrap}
+.wiki-btn:hover{background:rgba(200,169,110,0.2);gap:10px}
+
 /* ═══ Responsive ═══ */
 @media(max-width:768px){
   .quick-grid{grid-template-columns:repeat(2,1fr)}
@@ -297,6 +306,22 @@ Beauty Happens In Hair
 <p>不管是养护头皮还是建设社区，我们都不着急</p>
 </div>
 </div>
+</div>
+</section>
+
+<!-- ═══ 一键直达飞书知识库 ═══ -->
+<section class="container">
+<div class="wiki-banner">
+<div class="wiki-banner-left">
+<div class="wiki-banner-icon">📖</div>
+<div>
+<h4>完整的社区知识库</h4>
+<p>查看安柯耳头皮健康社区原始文档，获取更多详细内容</p>
+</div>
+</div>
+<a href="https://th93w6vprl.feishu.cn/wiki/Kt16w38m6iqfMbkzxbNcF5NJnVf" target="_blank" rel="noopener noreferrer" class="wiki-btn">
+飞书知识库 →
+</a>
 </div>
 </section>
 
