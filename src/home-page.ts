@@ -194,6 +194,15 @@ export function generateHomePage(): string {
 <span class="card-link">制作海报 →</span>
 </div>
 </a>
+<a href="/community" class="featured-card types">
+<div class="card-bg"></div>
+<span class="tag">社区</span>
+<div class="content">
+<h3>🌿 头皮健康社区</h3>
+<p>头皮健康、生活方式和自我照顾的小天地。慢慢来，让美好发生。</p>
+<span class="card-link">进入社区 →</span>
+</div>
+</a>
 </div>
 </section>
 

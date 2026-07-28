@@ -168,6 +168,7 @@ export function htmlShell(title: string, desc: string, canonical: string, bodyHT
 <a href="/detect">头皮检测</a>
 <a href="/guide">护发指南</a>
 <a href="/poster">分享海报</a>
+<a href="/community">社区</a>
 </nav>
 <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('active')"><span></span><span></span><span></span></button>
 </div>
@@ -179,6 +180,7 @@ export function htmlShell(title: string, desc: string, canonical: string, bodyHT
 <a href="/detect" onclick="this.closest('.mobile-menu').classList.remove('active')">头皮检测</a>
 <a href="/guide" onclick="this.closest('.mobile-menu').classList.remove('active')">护发指南</a>
 <a href="/poster" onclick="this.closest('.mobile-menu').classList.remove('active')">分享海报</a>
+<a href="/community" onclick="this.closest('.mobile-menu').classList.remove('active')">社区</a>
 </div>
 
 ${bodyHTML}

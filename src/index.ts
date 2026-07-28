@@ -12,6 +12,7 @@ import { CITIES, generateCityPage, generateCityListHtml } from './salon-pages';
 import { GUIDE_HTML } from './guide-page';
 import { generateHomePage } from './home-page';
 import { generateDetectPage } from './detect-page';
+import { generateCommunityPage } from './community-page';
 
 interface Env {
   DB: D1Database;
@@ -248,6 +249,10 @@ app.post('/api/poster/generate', async (c) => {
     return c.json({ code: 500, message: '生成失败: ' + err.message });
   }
 });
+
+// ═══ 安柯耳头皮健康社区 ═══
+app.get('/community', (c) => c.html(generateCommunityPage()));
+app.get('/community/', (c) => c.html(generateCommunityPage()));
 
 // Poster API
 app.get('/fenzhen/poster', (c) => {
