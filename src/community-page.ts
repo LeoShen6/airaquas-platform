@@ -3,7 +3,7 @@
  * "慢慢来，让美好发生 · Beauty Happens In Hair"
  */
 
-import { htmlShell, COLORS, BASE_CSS } from './design-system';
+import { htmlShell } from './design-system';
 
 export function generateCommunityPage(): string {
   return htmlShell('安柯耳 · 头皮健康社区 | Airaquas', '安柯耳头皮健康社区 — 关于头皮健康、生活方式和自我照顾的小天地。慢慢来，让美好发生。', '/community', `
@@ -19,7 +19,7 @@ export function generateCommunityPage(): string {
 
 /* ═══ Quick Cards ═══ */
 .quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.quick-card{padding:32px 24px;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);text-align:center;transition:all 0.3s}
+.quick-card{display:block;padding:32px 24px;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);text-align:center;transition:all 0.3s;color:inherit;text-decoration:none}
 .quick-card:hover{border-color:rgba(200,169,110,0.15);background:rgba(255,255,255,0.04);transform:translateY(-3px)}
 .quick-icon{width:48px;height:48px;margin:0 auto 16px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
 .quick-card h3{font-size:15px;font-weight:600;color:#e8e4dc;margin-bottom:4px}
@@ -29,8 +29,8 @@ export function generateCommunityPage(): string {
 
 /* ═══ Six Modules Grid ═══ */
 .module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.module-card{padding:28px;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);transition:all 0.3s}
-.module-card:hover{border-color:rgba(200,169,110,0.12);background:rgba(255,255,255,0.03)}
+.module-card{display:block;padding:28px;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);transition:all 0.3s;color:inherit;text-decoration:none}
+.module-card:hover{border-color:rgba(200,169,110,0.12);background:rgba(255,255,255,0.03);transform:translateY(-2px)}
 .module-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .module-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .module-card h3{font-size:15px;font-weight:600;color:#e8e4dc}
@@ -50,12 +50,21 @@ export function generateCommunityPage(): string {
 .principle-card h3{font-size:14px;font-weight:600;color:#e8e4dc;margin-bottom:4px}
 .principle-card p{font-size:12px;color:rgba(255,255,255,0.35);line-height:1.5}
 
+/* ═══ Radio section ═══ */
+.radio-list{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.radio-card{padding:24px;border-radius:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);text-align:center;transition:all 0.3s}
+.radio-card:hover{border-color:rgba(200,169,110,0.12);background:rgba(255,255,255,0.03)}
+.radio-card .ep-num{font-size:12px;color:#c8a96e;font-weight:600;margin-bottom:6px}
+.radio-card h4{font-size:14px;font-weight:600;color:#e8e4dc;margin-bottom:4px}
+.radio-card p{font-size:11px;color:rgba(255,255,255,0.3)}
+
 /* ═══ Responsive ═══ */
 @media(max-width:768px){
   .quick-grid{grid-template-columns:repeat(2,1fr)}
   .module-grid{grid-template-columns:1fr}
   .principles-grid{grid-template-columns:1fr 1fr}
   .principles-grid .center-item{grid-column:auto}
+  .radio-list{grid-template-columns:1fr}
 }
 @media(max-width:480px){
   .quick-grid{grid-template-columns:1fr}
@@ -92,45 +101,45 @@ Beauty Happens In Hair
 </div>
 </section>
 
-<!-- Quick Access -->
+<!-- Quick Access — 链接到现有的功能页面 -->
 <section id="quick" class="section container">
 <div class="label" style="text-align:center">QUICK ACCESS</div>
 <h2 class="h2" style="text-align:center;margin-bottom:36px">🚀 快速入口</h2>
 <div class="quick-grid">
-<div class="quick-card">
+<a href="/detect" class="quick-card">
 <div class="quick-icon" style="background:linear-gradient(135deg,rgba(200,169,110,0.12),rgba(200,169,110,0.05))">🎯</div>
 <h3>头皮自测</h3>
 <p>2分钟了解你的头皮类型</p>
 <div class="arrow">开始自测 →</div>
-</div>
-<div class="quick-card">
+</a>
+<a href="/scalp-types" class="quick-card">
 <div class="quick-icon" style="background:linear-gradient(135deg,rgba(200,169,110,0.12),rgba(200,169,110,0.05))">📖</div>
 <h3>四型详解</h3>
 <p>干性/油性/敏感性/混合性</p>
 <div class="arrow">查看详解 →</div>
-</div>
-<div class="quick-card">
+</a>
+<a href="/guide" class="quick-card">
 <div class="quick-icon" style="background:linear-gradient(135deg,rgba(200,169,110,0.12),rgba(200,169,110,0.05))">💆</div>
 <h3>养护指南</h3>
 <p>日常洗护实用技巧</p>
 <div class="arrow">进入指南 →</div>
-</div>
-<div class="quick-card">
+</a>
+<a href="#radio" class="quick-card">
 <div class="quick-icon" style="background:linear-gradient(135deg,rgba(200,169,110,0.12),rgba(200,169,110,0.05))">🎵</div>
 <h3>头发丝电台</h3>
 <p>治愈系生活随笔</p>
 <div class="arrow">收听电台 →</div>
-</div>
+</a>
 </div>
 </section>
 
-<!-- Six Modules -->
+<!-- Six Modules — 每个模块链接到对应的功能页 -->
 <section class="section container">
 <div class="label" style="text-align:center">EXPLORE</div>
 <h2 class="h2" style="text-align:center;margin-bottom:36px">📚 六大板块</h2>
 <div class="module-grid">
 
-<div class="module-card">
+<a href="/scalp-types" class="module-card">
 <div class="module-header">
 <div class="module-icon" style="background:linear-gradient(135deg,rgba(200,169,110,0.15),rgba(200,169,110,0.05));color:#c8a96e">🧪</div>
 <h3>头皮健康实验室</h3>
@@ -142,9 +151,9 @@ Beauty Happens In Hair
 <span class="module-highlight">那些年我们踩过的头皮养护坑</span>
 </div>
 <div class="module-link">进入实验室 →</div>
-</div>
+</a>
 
-<div class="module-card">
+<a href="/detect" class="module-card">
 <div class="module-header">
 <div class="module-icon" style="background:linear-gradient(135deg,rgba(200,169,110,0.15),rgba(200,169,110,0.05));color:#c8a96e">🎯</div>
 <h3>四型五维自测中心</h3>
@@ -157,9 +166,9 @@ Beauty Happens In Hair
 <span class="module-highlight">⚖️ 混合性头皮详解</span>
 </div>
 <div class="module-link">进入自测中心 →</div>
-</div>
+</a>
 
-<div class="module-card">
+<a href="/guide" class="module-card">
 <div class="module-header">
 <div class="module-icon" style="background:linear-gradient(135deg,rgba(200,169,110,0.15),rgba(200,169,110,0.05));color:#c8a96e">🌿</div>
 <h3>日常养护指南</h3>
@@ -171,9 +180,9 @@ Beauty Happens In Hair
 <span class="module-highlight">头皮也需要防晒？</span>
 </div>
 <div class="module-link">进入养护指南 →</div>
-</div>
+</a>
 
-<div class="module-card">
+<a href="#radio" class="module-card">
 <div class="module-header">
 <div class="module-icon" style="background:linear-gradient(135deg,rgba(200,169,110,0.15),rgba(200,169,110,0.05));color:#c8a96e">💬</div>
 <h3>头发丝电台</h3>
@@ -185,9 +194,9 @@ Beauty Happens In Hair
 <span class="module-highlight">🎵 vol.02 宁夏</span>
 </div>
 <div class="module-link">进入电台 →</div>
-</div>
+</a>
 
-<div class="module-card">
+<a href="#community-talk" class="module-card">
 <div class="module-header">
 <div class="module-icon" style="background:linear-gradient(135deg,rgba(200,169,110,0.15),rgba(200,169,110,0.05));color:#c8a96e">👥</div>
 <h3>头皮说·社区</h3>
@@ -199,9 +208,9 @@ Beauty Happens In Hair
 <span class="module-highlight">社区交流</span>
 </div>
 <div class="module-link">进入社区 →</div>
-</div>
+</a>
 
-<div class="module-card">
+<a href="/" class="module-card">
 <div class="module-header">
 <div class="module-icon" style="background:linear-gradient(135deg,rgba(200,169,110,0.15),rgba(200,169,110,0.05));color:#c8a96e">📦</div>
 <h3>关于安柯耳</h3>
@@ -212,8 +221,46 @@ Beauty Happens In Hair
 <span class="module-highlight">认识我们的团队</span>
 </div>
 <div class="module-link">了解安柯耳 →</div>
-</div>
+</a>
 
+</div>
+</section>
+
+<!-- ═══ 头发丝电台 ═══ -->
+<section id="radio" class="section container" style="text-align:center">
+<div class="label">HAIR RADIO</div>
+<h2 class="h2">🎵 头发丝电台</h2>
+<p style="color:rgba(255,255,255,0.35);margin-bottom:36px;font-size:14px">「风吹过头顶」音乐疗愈系列 + 生活随笔</p>
+<div class="radio-list" style="max-width:720px;margin:0 auto">
+<div class="radio-card">
+<div class="ep-num">VOL.04</div>
+<h4>🎵 周末的慢生活</h4>
+<p>让音符带你放慢脚步</p>
+</div>
+<div class="radio-card">
+<div class="ep-num">VOL.03</div>
+<h4>🎵 给自己的一首歌</h4>
+<p>在旋律里遇见自己</p>
+</div>
+<div class="radio-card">
+<div class="ep-num">VOL.02</div>
+<h4>🎵 宁夏</h4>
+<p>安静的夏夜，好梦</p>
+</div>
+</div>
+</section>
+
+<!-- ═══ 头皮说·社区 ═══ -->
+<section id="community-talk" class="section container" style="text-align:center">
+<div class="brand">
+<div class="label">SCALP TALK</div>
+<h2 class="h2">👥 头皮说·社区</h2>
+<p style="color:rgba(255,255,255,0.35);max-width:500px;margin:0 auto 32px;font-size:14px">分享你的头皮故事、养护心得、好物推荐。这里是属于我们的小天地，欢迎来玩。</p>
+<div class="features" style="max-width:600px;margin:0 auto">
+<div class="feature"><span class="feature-icon">📝</span><h4>分享养护心得</h4><p>记录你的头皮变化历程，帮助更多人</p></div>
+<div class="feature"><span class="feature-icon">⭐</span><h4>好物推荐</h4><p>用过的好产品，真实的体验分享</p></div>
+<div class="feature"><span class="feature-icon">💬</span><h4>社区交流</h4><p>和同路人聊聊头皮那些事</p></div>
+</div>
 </div>
 </section>
 
