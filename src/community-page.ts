@@ -148,7 +148,7 @@ Beauty Happens In Hair
 <h2 class="h2" style="text-align:center;margin-bottom:36px">📚 六大板块</h2>
 <div class="module-grid">
 
-<a href="/scalp-types" class="module-card">
+<a href="https://th93w6vprl.feishu.cn/wiki/L25rwc2kgiJwYvkZjY1cv1uLnpg?from=from_copylink" target="_blank" rel="noopener noreferrer" class="module-card">
 <div class="module-header">
 <div class="module-icon" style="background:linear-gradient(135deg,rgba(200,169,110,0.15),rgba(200,169,110,0.05));color:#c8a96e">🧪</div>
 <h3>头皮健康实验室</h3>
