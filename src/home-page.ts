@@ -109,7 +109,7 @@ export function generateHomePage(): string {
 </div>
 <div class="hero-stats anim-fade-up anim-delay-3">
 <div class="hero-stat-item"><div class="hero-stat-num">78</div><div class="hero-stat-label">覆盖城市</div></div>
-<div class="hero-stat-item"><div class="hero-stat-num">92K+</div><div class="hero-stat-label">合作沙⿻</div></div>
+<div class="hero-stat-item"><div class="hero-stat-num">92K+</div><div class="hero-stat-label">合作沙龙</div></div>
 <div class="hero-stat-item"><div class="hero-stat-num">92%</div><div class="hero-stat-label">AI 准确率</div></div>
 </div>
 </div>
