@@ -101,7 +101,7 @@ export function generateHomePage(): string {
 <div class="hero-grid">
 <div>
 <div class="hero-eyebrow anim-fade-up anim-delay-1">AI 头皮健康 · 时尚媒介</div>
-<h1 class="hero-title anim-fade-up anim-delay-2">头皮<br><span class="highlight">科学美学</span></h1>
+<h1 class="hero-title anim-fade-up anim-delay-2">头皮<br><span class="highlight">科技美学新范式</span></h1>
 <p class="hero-sub anim-fade-up anim-delay-3">AI 分型检测 · 城市美发圈 · 科学护发指南<br class="hide-mobile">重塑头皮健康认知方式</p>
 <div class="hero-actions anim-fade-up anim-delay-3">
 <a href="/detect" class="btn btn-primary">免费AI检测 →</a>

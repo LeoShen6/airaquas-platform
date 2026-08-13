@@ -319,7 +319,7 @@ Beauty Happens In Hair
 <p>查看安柯耳头皮健康社区原始文档，获取更多详细内容</p>
 </div>
 </div>
-<a href="https://th93w6vprl.feishu.cn/wiki/Kt16w38m6iqfMbkzxbNcF5NJnVf" target="_blank" rel="noopener noreferrer" class="wiki-btn">
+<a href="https://th93w6vprl.feishu.cn/wiki/HP46wiZX5if30PkBQcIcQwJNnmb?from=from_copylink" target="_blank" rel="noopener noreferrer" class="wiki-btn">
 飞书知识库 →
 </a>
 </div>
